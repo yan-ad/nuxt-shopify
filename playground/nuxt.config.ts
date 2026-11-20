@@ -1,6 +1,9 @@
 export default defineNuxtConfig({
   modules: ['../src/module'],
-  devtools: { enabled: true,     disableAuthorization: true, },
+  devtools: {
+    enabled: true,
+    disableAuthorization: true,
+  },
   compatibilityDate: 'latest',
   vite: {
     server: {

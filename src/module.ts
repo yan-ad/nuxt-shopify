@@ -77,38 +77,6 @@ export default defineNuxtModule<ModuleOptions>({
       navLinks: options.navLinks || []
     }
 
-    // ─── Vite: Allow Tunnel Hosts ──────────────────────────────────────
-    // Shopify dev uses Cloudflare tunnels with random subdomains.
-    if (nuxt.options.dev) {
-      if (nuxt.options.devtools !== false) {
-        nuxt.options.devtools = {
-          ...(typeof nuxt.options.devtools === 'object'
-            ? nuxt.options.devtools
-            : {}),
-          enabled:
-            typeof nuxt.options.devtools === 'object'
-              ? (nuxt.options.devtools.enabled ?? true)
-              : true,
-          disableAuthorization: true
-        }
-      }
-
-      extendViteConfig((config) => {
-        config.server = config.server || {}
-        const existingHosts = config.server.allowedHosts
-        const configuredHosts = options.allowedHosts
-
-        if (existingHosts === true || configuredHosts === true) {
-          config.server.allowedHosts = true
-        } else {
-          config.server.allowedHosts = [
-            ...(Array.isArray(existingHosts) ? existingHosts : []),
-            ...(configuredHosts || [])
-          ].filter((host, index, hosts) => hosts.indexOf(host) === index)
-        }
-      })
-    }
-
     // ─── Aliases ───────────────────────────────────────────────────────
     // Allow importing from '#shopify/server' in server code
     nuxt.options.alias['#shopify/server'] = resolve('./runtime/server')

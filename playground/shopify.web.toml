@@ -5,4 +5,4 @@ webhooks_path = "/api/webhooks"
 [commands]
 install = "bun install"
 # Shopify CLI owns the terminal UI; keep Nuxt output as a plain stream so it can be captured.
-dev = "bunx nuxt dev --no-tui"
+dev = "bunx nuxt dev --no-tui --public"
