@@ -103,7 +103,6 @@
     "isbot": "^5.1.44"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^3.4.4",
     "@nuxt/module-builder": "^1.0.4",
     "@nuxt/schema": "^4.6.4",
     "@nuxt/test-utils": "^4.4.0",
