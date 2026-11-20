@@ -7,7 +7,7 @@ import {
   addServerImportsDir,
   addRouteMiddleware,
   extendPages,
-  addServerPlugin,
+  addNitroPlugin,
   useNitro,
   useLogger,
   extendViteConfig
@@ -225,8 +225,8 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     // ─── Server Plugins ───
-    addServerPlugin(resolve('./runtime/server/plugins/shopify-defaults'))
-    addServerPlugin(resolve('./runtime/server/plugins/add-response-headers'))
+    addNitroPlugin(resolve('./runtime/server/plugins/shopify-defaults'))
+    addNitroPlugin(resolve('./runtime/server/plugins/add-response-headers'))
 
     // ─── Transpile ─────────────────────────────────────────────────────
     nuxt.options.build.transpile.push(resolve('./runtime'))
