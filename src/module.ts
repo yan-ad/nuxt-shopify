@@ -19,6 +19,8 @@ import {
   type PolarisIcon
 } from './runtime/types'
 import { ApiVersion } from '@shopify/shopify-api'
+import { APP_BRIDGE_URL, POLARIS_URL, CDN_URL } from './runtime/shared/polaris'
+
 
 export type { ModuleOptions, PolarisIcon }
 
@@ -119,11 +121,11 @@ export default defineNuxtModule<ModuleOptions>({
           tagPosition: 'head'
         },
         {
-          src: 'https://cdn.shopify.com/shopifycloud/app-bridge.js',
+          src: APP_BRIDGE_URL,
           tagPosition: 'head'
         },
         {
-          src: 'https://cdn.shopify.com/shopifycloud/polaris.js',
+          src: POLARIS_URL,
           tagPosition: 'head'
         },
         ...(nuxt.options.app.head.script || [])

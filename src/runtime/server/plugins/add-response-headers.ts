@@ -1,9 +1,6 @@
 import { defineNitroPlugin } from 'nitropack/runtime'
 import { getQuery, setResponseHeader } from 'h3'
-
-const APP_BRIDGE_URL = 'https://cdn.shopify.com/shopifycloud/app-bridge.js'
-const POLARIS_URL = 'https://cdn.shopify.com/shopifycloud/polaris.js'
-const CDN_URL = 'https://cdn.shopify.com'
+import { APP_BRIDGE_URL, POLARIS_URL, CDN_URL } from '../../shared/polaris'
 
 /**
  * Nitro plugin that adds Shopify-required response headers to every document request.
