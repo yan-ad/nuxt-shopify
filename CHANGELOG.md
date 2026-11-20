@@ -1,5 +1,39 @@
 # Changelog
 
+## v1.3.0
+
+[compare changes](https://github.com/yan-ad/nuxt-shopify/compare/v1.2.0...v1.3.0)
+
+### 🚀 Enhancements
+
+- **polaris:** Add shared Shopify CDN URLs ([9a02eeb](https://github.com/yan-ad/nuxt-shopify/commit/9a02eeb))
+- Set minimum version of nuxt to 4.6.4 and add cookie name options ([27ec23f](https://github.com/yan-ad/nuxt-shopify/commit/27ec23f))
+- Update middleware and cache context and force to nuxt 4.6.4 as minimum ([ab9549d](https://github.com/yan-ad/nuxt-shopify/commit/ab9549d))
+- Wire-up new devtools 4.2.x support ([67b4691](https://github.com/yan-ad/nuxt-shopify/commit/67b4691))
+- Update types of redirectCookie ([f15ca20](https://github.com/yan-ad/nuxt-shopify/commit/f15ca20))
+- Bun nuxt content ([0011dc2](https://github.com/yan-ad/nuxt-shopify/commit/0011dc2))
+
+### 🩹 Fixes
+
+- Update zod integrations ([b2e7288](https://github.com/yan-ad/nuxt-shopify/commit/b2e7288))
+
+### 💅 Refactors
+
+- Replace deprecated handler to server ([d8205a4](https://github.com/yan-ad/nuxt-shopify/commit/d8205a4))
+- Rename package to @yan-ad/nuxt-shopify ([9bced85](https://github.com/yan-ad/nuxt-shopify/commit/9bced85))
+
+### 📖 Documentation
+
+- Add zod ([8eadf6c](https://github.com/yan-ad/nuxt-shopify/commit/8eadf6c))
+
+### 🏡 Chore
+
+- **release:** V1.2.0 ([2958ec7](https://github.com/yan-ad/nuxt-shopify/commit/2958ec7))
+
+### ❤️ Contributors
+
+- Yanuar ([@yan-ad](https://github.com/yan-ad))
+
 ## v1.2.0
 
 [compare changes](https://github.com/yan-ad/shopify-app-nuxt/compare/v1.1.0...v1.2.0)
