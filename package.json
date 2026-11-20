@@ -108,7 +108,6 @@
     "@nuxt/test-utils": "^4.4.0",
     "@types/node": "^26.6.6",
     "changelogen": "^0.6.2",
-    "node-pty": "^1.1.0",
     "nuxt": "^4.6.4",
     "oxfmt": "^0.79.0",
     "oxlint": "^1.94.0",
