@@ -73,6 +73,7 @@ export default defineNuxtModule<ModuleOptions>({
       apiKey: options.apiKey,
       authPagePath: options.authPage !== false ? '/auth' : '',
       authPathPrefix: options.authPathPrefix || '/_shopify/auth',
+      redirectCookie: options.redirectCookie || 'sh-redirect-to',
       navLinks: options.navLinks || []
     }
 
@@ -84,6 +85,10 @@ export default defineNuxtModule<ModuleOptions>({
           ...(typeof nuxt.options.devtools === 'object'
             ? nuxt.options.devtools
             : {}),
+          enabled:
+            typeof nuxt.options.devtools === 'object'
+              ? (nuxt.options.devtools.enabled ?? true)
+              : true,
           disableAuthorization: true
         }
       }

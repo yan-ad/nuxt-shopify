@@ -243,6 +243,7 @@ export interface ShopifyPublicConfig {
   apiKey: string
   authPagePath: string
   authPathPrefix: string
+  redirectCookie: string
   navLinks: NavLink[]
 }
 
