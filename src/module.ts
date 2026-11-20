@@ -19,7 +19,7 @@ import {
   type PolarisIcon
 } from './runtime/types'
 import { ApiVersion } from '@shopify/shopify-api'
-import { APP_BRIDGE_URL, POLARIS_URL, CDN_URL } from './runtime/shared/polaris'
+import { APP_BRIDGE_URL, POLARIS_URL } from './runtime/shared/polaris'
 
 
 export type { ModuleOptions, PolarisIcon }
@@ -29,7 +29,7 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'shopify-app-nuxt',
     configKey: 'shopify',
     compatibility: {
-      nuxt: '^4.4.2'
+      nuxt: '^4.6.4'
     }
   },
   defaults: {
@@ -40,7 +40,8 @@ export default defineNuxtModule<ModuleOptions>({
     authPathPrefix: '/_shopify/auth',
     distribution: AppDistribution.AppStore,
     useOnlineTokens: false,
-    componentPrefix: 'Sh'
+    componentPrefix: 'Sh',
+    redirectCookie: 'sh-redirect-to'
   },
   onInstall() {
     console.log('🛍️ Shopify App Module installed!')
