@@ -9,8 +9,7 @@ import {
   extendPages,
   addNitroPlugin,
   useNitro,
-  useLogger,
-  extendViteConfig
+  useLogger
 } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
 import {

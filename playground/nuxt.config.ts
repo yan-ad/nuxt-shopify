@@ -2,9 +2,12 @@ export default defineNuxtConfig({
   modules: ['../src/module'],
   devtools: {
     enabled: true,
-    disableAuthorization: true,
+    disableAuthorization: true
   },
   compatibilityDate: 'latest',
+  features: {
+    devLogs: true
+  },
   vite: {
     server: {
       allowedHosts: ['.trycloudflare.com']
