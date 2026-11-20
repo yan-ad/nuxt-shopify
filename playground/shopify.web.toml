@@ -1,7 +1,8 @@
-name = "nuxt-shopify-app"
+name = "nuxify"
 roles = ["frontend", "backend"]
 webhooks_path = "/api/webhooks"
 
 [commands]
 install = "bun install"
-dev = "bunx nuxi dev"
+# Shopify CLI owns the terminal UI; keep Nuxt output as a plain stream so it can be captured.
+dev = "bunx nuxt dev --no-tui"

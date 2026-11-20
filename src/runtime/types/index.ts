@@ -51,6 +51,13 @@ export interface ModuleOptions {
   appUrl: string
 
   /**
+   * Vite dev-server host allowlist for Shopify tunnels.
+   * A leading dot matches the host and its subdomains.
+   * @default ['.trycloudflare.com']
+   */
+  allowedHosts?: string[] | true
+
+  /**
    * The Shopify API version to use. Defaults to the latest stable version.
    */
   apiVersion?: ApiVersion

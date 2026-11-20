@@ -1,10 +1,10 @@
 export default defineNuxtConfig({
   modules: ['../src/module'],
-  devtools: { enabled: true },
+  devtools: { enabled: true,     disableAuthorization: true, },
   compatibilityDate: 'latest',
   vite: {
     server: {
-      allowedHosts: ['*.trycloudflare.com']
+      allowedHosts: ['.trycloudflare.com']
     }
   },
   shopify: {

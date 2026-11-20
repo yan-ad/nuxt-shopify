@@ -21,7 +21,6 @@ import {
 import { ApiVersion } from '@shopify/shopify-api'
 import { APP_BRIDGE_URL, POLARIS_URL } from './runtime/shared/polaris'
 
-
 export type { ModuleOptions, PolarisIcon }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -36,6 +35,7 @@ export default defineNuxtModule<ModuleOptions>({
     apiKey: '',
     apiSecretKey: '',
     appUrl: '',
+    allowedHosts: ['.trycloudflare.com'],
     apiVersion: ApiVersion.January26,
     authPathPrefix: '/_shopify/auth',
     distribution: AppDistribution.AppStore,
@@ -77,11 +77,30 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     // ─── Vite: Allow Tunnel Hosts ──────────────────────────────────────
-    // Shopify dev uses Cloudflare tunnels with random subdomains — allow all hosts
+    // Shopify dev uses Cloudflare tunnels with random subdomains.
     if (nuxt.options.dev) {
+      if (nuxt.options.devtools !== false) {
+        nuxt.options.devtools = {
+          ...(typeof nuxt.options.devtools === 'object'
+            ? nuxt.options.devtools
+            : {}),
+          disableAuthorization: true
+        }
+      }
+
       extendViteConfig((config) => {
         config.server = config.server || {}
-        config.server.allowedHosts = true
+        const existingHosts = config.server.allowedHosts
+        const configuredHosts = options.allowedHosts
+
+        if (existingHosts === true || configuredHosts === true) {
+          config.server.allowedHosts = true
+        } else {
+          config.server.allowedHosts = [
+            ...(Array.isArray(existingHosts) ? existingHosts : []),
+            ...(configuredHosts || [])
+          ].filter((host, index, hosts) => hosts.indexOf(host) === index)
+        }
       })
     }
 

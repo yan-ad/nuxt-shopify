@@ -3,7 +3,8 @@
   "name": "my-module-playground",
   "type": "module",
   "scripts": {
-    "dev": "shopify app dev"
+    "dev": "shopify app dev",
+    "dev:nuxt": "bunx nuxi dev"
   },
   "dependencies": {
     "nuxt": "^4.6.4"
