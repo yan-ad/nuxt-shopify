@@ -1,8 +1,8 @@
-# shopify-app-nuxt — Copilot Instructions
+# @yan-ad/nuxt-shopify — Copilot Instructions
 
 ## Project Overview
 
-`shopify-app-nuxt` is a **Nuxt 4 module** that integrates Shopify into Nuxt applications — providing authentication, webhooks, billing, session management, and App Bridge. It is the Nuxt equivalent of `@shopify/shopify-app-react-router`.
+`@yan-ad/nuxt-shopify` is a **Nuxt 4 module** that integrates Shopify into Nuxt applications — providing authentication, webhooks, billing, session management, and App Bridge. It is the Nuxt equivalent of `@shopify/shopify-app-react-router`.
 
 **Package manager:** Bun (`bun install`, `bun run <script>`)
 

@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "shopify-app-nuxt",
+      "name": "@yan-ad/nuxt-shopify",
       "dependencies": {
         "@nuxt/kit": "^4.6.4",
         "@shopify/admin-api-client": "^2.0.1",

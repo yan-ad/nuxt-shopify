@@ -12,7 +12,7 @@ seo:
 Build Shopify Apps with Nuxt
 
 #description
-`shopify-app-nuxt` is a Nuxt 4 module that provides authentication, webhooks, Polaris components, and App Bridge integration for building Shopify apps with Nuxt. Inspired by `@shopify/shopify-app-react-router`, it brings the same capabilities to the Nuxt ecosystem.
+`@yan-ad/nuxt-shopify` is a Nuxt 4 module that provides authentication, webhooks, Polaris components, and App Bridge integration for building Shopify apps with Nuxt. Inspired by `@shopify/shopify-app-react-router`, it brings the same capabilities to the Nuxt ecosystem.
 
 #headline
   :::u-button
@@ -34,7 +34,7 @@ Build Shopify Apps with Nuxt
   Get started
   :::
 
-  :::copy-code-input{source="npx nuxt module add shopify-app-nuxt"}
+  :::copy-code-input{source="npx nuxt module add @yan-ad/nuxt-shopify"}
   :::
 ::
 

@@ -1,8 +1,8 @@
-# `shopify-app-nuxt`
+# `@yan-ad/nuxt-shopify`
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
-[![npm version](https://badge.fury.io/js/shopify-app-nuxt.svg)](https://badge.fury.io/js/shopify-app-nuxt)
-[![NPM Downloads](https://img.shields.io/npm/dm/shopify-app-nuxt)](https://npmtrends.com/shopify-app-nuxt)
+[![npm version](https://badge.fury.io/js/%40yan-ad%2Fnuxt-shopify.svg)](https://badge.fury.io/js/%40yan-ad%2Fnuxt-shopify)
+[![NPM Downloads](https://img.shields.io/npm/dm/@yan-ad/nuxt-shopify)](https://npmtrends.com/%40yan-ad%2Fnuxt-shopify)
 [![Nuxt](https://img.shields.io/badge/Nuxt-020420?logo=nuxt)](https://nuxt.com)
 
 A [Nuxt](https://nuxt.com/) module for building Shopify apps — authentication, webhooks, billing, Polaris components, and App Bridge integration. The Nuxt equivalent of `@shopify/shopify-app-react-router`.
@@ -13,7 +13,7 @@ A [Nuxt](https://nuxt.com/) module for building Shopify apps — authentication,
 ## Quick start
 
 ```bash
-npx nuxi@latest module add shopify-app-nuxt
+npx nuxi@latest module add @yan-ad/nuxt-shopify
 ```
 
 Then configure your API credentials and app URL in `nuxt.config.ts`:
@@ -21,7 +21,7 @@ Then configure your API credentials and app URL in `nuxt.config.ts`:
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ['shopify-app-nuxt'],
+  modules: ['@yan-ad/nuxt-shopify'],
   shopify: {
     apiKey: 'your-api-key',
     apiSecretKey: 'your-api-secret',

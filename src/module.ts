@@ -25,7 +25,7 @@ export type { ModuleOptions, PolarisIcon }
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'shopify-app-nuxt',
+    name: '@yan-ad/nuxt-shopify',
     configKey: 'shopify',
     compatibility: {
       nuxt: '^4.6.4'
@@ -48,12 +48,12 @@ export default defineNuxtModule<ModuleOptions>({
   },
   onUpgrade() {
     console.log(
-      `🛍️ Shopify App Module upgraded! Please always read the docs https://github.com/kiriminaja/shopify-app-nuxt`
+      `🛍️ Shopify App Module upgraded! Please always read the docs https://github.com/yan-ad/nuxt-shopify`
     )
   },
   setup(options, nuxt: Nuxt) {
     const { resolve } = createResolver(import.meta.url)
-    const logger = useLogger('shopify-app-nuxt:module')
+    const logger = useLogger('@yan-ad/nuxt-shopify:module')
 
     // ─── Runtime Config ────────────────────────────────────────────────
     // Private server-side config (secrets — not exposed to client)

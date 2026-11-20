@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
       try {
         await api.webhooks.register({ session })
       } catch (e) {
-        console.debug('[shopify-app-nuxt] Failed to register webhooks:', e)
+        console.debug('[@yan-ad/nuxt-shopify] Failed to register webhooks:', e)
       }
     }
 
@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Gone'
       })
     }
-    console.debug('[shopify-app-nuxt] Auth callback error:', error)
+    console.debug('[@yan-ad/nuxt-shopify] Auth callback error:', error)
     throw createError({
       statusCode: 500,
       statusMessage: 'Authentication failed',

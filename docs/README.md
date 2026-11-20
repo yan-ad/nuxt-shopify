@@ -1,6 +1,6 @@
-# shopify-app-nuxt Documentation
+# @yan-ad/nuxt-shopify Documentation
 
-> Documentation site for `shopify-app-nuxt` — a Nuxt 4 module for building Shopify apps.
+> Documentation site for `@yan-ad/nuxt-shopify` — a Nuxt 4 module for building Shopify apps.
 
 Built with [Docus](https://docus.dev) (Nuxt Content + Nuxt UI).
 

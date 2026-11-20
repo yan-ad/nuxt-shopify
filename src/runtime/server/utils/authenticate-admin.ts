@@ -217,7 +217,7 @@ async function performTokenExchange(
     onlineSession = result.session
   } catch (error: unknown) {
     const err = error as { response?: { body?: unknown }; message?: string }
-    console.debug('[shopify-app-nuxt] Token exchange failed:', {
+    console.debug('[@yan-ad/nuxt-shopify] Token exchange failed:', {
       shop,
       requestedTokenType: config.useOnlineTokens
         ? RequestedTokenType.OnlineAccessToken

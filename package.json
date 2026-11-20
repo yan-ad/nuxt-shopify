@@ -1,9 +1,9 @@
 {
-  "name": "shopify-app-nuxt",
+  "name": "@yan-ad/nuxt-shopify",
   "version": "1.2.0",
   "description": "Nuxt module for building Shopify apps — authentication, webhooks, billing, Polaris components, and App Bridge integration",
   "repository": {
-    "url": "git+https://github.com/yan-ad/shopify-app-nuxt.git"
+    "url": "git+https://github.com/yan-ad/nuxt-shopify.git"
   },
   "homepage": "https://shopify-app-nuxt.vercel.app",
   "keywords": [
