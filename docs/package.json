@@ -2,7 +2,7 @@
   "name": "docs",
   "scripts": {
     "dev": "nuxt dev --extends docus",
-    "build": "nuxt build --extends docus"
+    "build": "nuxt prepare --extends docus && nuxt build --extends docus"
   },
   "dependencies": {
     "@nuxt/content": "^3.14.0",
