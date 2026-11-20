@@ -1,8 +1,8 @@
-import { defineNuxtRouteMiddleware, useCookie } from '#app'
-import { navigateTo } from 'nuxt/app'
+import { defineNuxtRouteMiddleware, useRuntimeConfig, useCookie, navigateTo } from '#app'
 
 export default defineNuxtRouteMiddleware(() => {
-  const redirectTo = useCookie('shopify-redirect-to')
+  const config = useRuntimeConfig().public.shopify
+  const redirectTo = useCookie(config.redirectCookie)
 
   // On the server, check if the request has the required Shopify query params.
   if (import.meta.server) {

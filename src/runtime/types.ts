@@ -659,6 +659,11 @@ export interface ModuleOptions {
    * @default false
    */
   codegen?: boolean | string[]
+
+  /**
+   * Cookie name to save autoRedirect on window refresh when shopify global visible from unavailable
+   */
+  redirectCookie?: string
 }
 
 export interface NavLink {

@@ -15,7 +15,8 @@ const updated = ref(false)
 let pollTimer: ReturnType<typeof setInterval> | undefined
 
 onMounted(() => {
-  const redirectTo = useCookie('shopify-redirect-to')
+  const config = useRuntimeConfig().public.shopify
+  const redirectTo = useCookie(config.redirectCookie)
 
   pollTimer = setInterval(() => {
     if (updated.value) return

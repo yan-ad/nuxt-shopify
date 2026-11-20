@@ -1,11 +1,10 @@
-import { defineNuxtRouteMiddleware, useRuntimeConfig, useCookie } from '#app'
-import { navigateTo } from 'nuxt/app'
+import { defineNuxtRouteMiddleware, navigateTo, useCookie, useRuntimeConfig } from '#app'
 
 export default defineNuxtRouteMiddleware((to) => {
   const config = useRuntimeConfig().public.shopify
 
   const authPage = config.authPagePath || '/auth'
-  const redirectTo = useCookie('shopify-redirect-to')
+  const redirectTo = useCookie(config.redirectCookie)
 
   // On the server, check if the request has the required Shopify query params.
   // Shopify always adds `shop` and `host` when loading an embedded app.

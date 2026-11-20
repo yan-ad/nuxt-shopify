@@ -84,10 +84,12 @@
     "dev:docs": "cd playground && nuxt dev --open --port 3001",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && cd playground && nuxt prepare",
     "release": "bun run lint && bun run test && bun run prepack && changelogen --release && npm publish --access public && git push --follow-tags",
-    "lint": "eslint .",
+    "lint": "oxlint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check ."
   },
   "dependencies": {
     "@nuxt/kit": "^4.6.4",
@@ -101,14 +103,14 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "^4.2.0",
-    "@nuxt/eslint-config": "^1.17.0",
     "@nuxt/module-builder": "^1.0.4",
     "@nuxt/schema": "^4.6.4",
     "@nuxt/test-utils": "^4.4.0",
     "@types/node": "^26.6.6",
     "changelogen": "^0.6.2",
-    "eslint": "^10.15.0",
     "nuxt": "^4.6.4",
+    "oxfmt": "^0.79.0",
+    "oxlint": "^1.94.0",
     "typescript": "^5.9.3",
     "vitest": "^5.1.1",
     "vue-tsc": "^3.3.5"
