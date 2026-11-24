@@ -93,24 +93,24 @@
     "format:check": "oxfmt --check ."
   },
   "dependencies": {
-    "@nuxt/kit": "^4.6.4",
+    "@nuxt/kit": "^4.7.0",
     "@shopify/admin-api-client": "^2.0.1",
     "@shopify/app-bridge-types": "^0.7.5",
     "@shopify/shopify-api": "^15.1.2",
     "@shopify/shopify-app-session-storage": "^7.0.4",
     "@shopify/shopify-app-session-storage-memory": "^8.0.4",
     "h3": "^1.15.11",
-    "isbot": "^5.1.44"
+    "isbot": "^5.2.3"
   },
   "devDependencies": {
     "@nuxt/module-builder": "^1.0.4",
-    "@nuxt/schema": "^4.6.4",
+    "@nuxt/schema": "^4.7.0",
     "@nuxt/test-utils": "^4.4.0",
     "@types/node": "^26.6.6",
     "changelogen": "^0.6.2",
-    "nuxt": "^4.6.4",
-    "oxfmt": "^0.79.0",
-    "oxlint": "^1.94.0",
+    "nuxt": "^4.7.0",
+    "oxfmt": "^0.80.0",
+    "oxlint": "^1.95.0",
     "typescript": "^5.9.3",
     "vitest": "^5.1.1",
     "vue-tsc": "^3.3.5"
