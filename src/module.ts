@@ -12,6 +12,7 @@ import {
   useLogger
 } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
+import { addCustomTab } from '@nuxt/devtools-kit'
 import {
   AppDistribution,
   type ModuleOptions,
@@ -62,6 +63,27 @@ export default defineNuxtModule<ModuleOptions>({
       Boolean(isCustomElement?.(tag))
 
     if (nuxt.options.dev) {
+      extendPages((pages) => {
+        pages.push({
+          name: 'shopify-devtools',
+          path: '/_shopify/devtools',
+          file: resolve('./runtime/pages/shopify-devtools.vue')
+        })
+      })
+      addServerHandler({
+        route: '/_shopify/devtools/store',
+        method: 'get',
+        handler: resolve('./runtime/server/routes/devtools-store')
+      })
+      addCustomTab(
+        {
+          name: 'nuxt-shopify',
+          title: 'Shopify',
+          icon: 'simple-icons:shopify',
+          view: { type: 'iframe', src: '/_shopify/devtools' }
+        },
+        nuxt
+      )
       // Shopify CLI captures Nuxt's output but cannot display its auth prompt.
       // Disable the DevTools browser authorization gate for local development.
       if (nuxt.options.devtools !== false) {

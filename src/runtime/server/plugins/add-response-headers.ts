@@ -1,4 +1,5 @@
 import { definePlugin } from 'nitro'
+import { shopifyFramePolicy } from '../utils/frame-policy'
 import { APP_BRIDGE_URL, POLARIS_URL, CDN_URL } from '../../shared/polaris'
 
 /**
@@ -22,17 +23,9 @@ export default definePlugin((nitroApp) => {
       )
     }
 
-    // Content-Security-Policy — scope frame-ancestors to the requesting shop
-    if (shop) {
-      response.headers.set(
-        'Content-Security-Policy',
-        `frame-ancestors https://${shop} https://admin.shopify.com https://*.spin.dev https://admin.myshopify.io https://admin.shop.dev;`
-      )
-    } else {
-      response.headers.set(
-        'Content-Security-Policy',
-        `frame-ancestors https://*.myshopify.com https://admin.shopify.com https://*.spin.dev https://admin.myshopify.io https://admin.shop.dev;`
-      )
-    }
+    response.headers.set(
+      'Content-Security-Policy',
+      shopifyFramePolicy(event.req.url, import.meta.dev)
+    )
   })
 })

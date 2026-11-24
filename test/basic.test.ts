@@ -69,6 +69,15 @@ describe('@yan-ad/nuxt-shopify module', async () => {
   // ─── Module Setup & SSR Head Tags ──────────────────────────────────
 
   describe('module setup', () => {
+    it('does not expose the development inspector in production', async () => {
+      for (const path of ['/_shopify/devtools', '/_shopify/devtools/store']) {
+        const response = await fetch(url(path), { redirect: 'manual' })
+        const body = await response.text()
+        expect(body).not.toContain('Store inspector')
+        expect(body).not.toContain('accessTokenExpires')
+        expect(body).not.toContain('installedScopes')
+      }
+    })
     it('renders the index page', async () => {
       const html = await $fetch('/')
       expect(html).toContain('basic')
