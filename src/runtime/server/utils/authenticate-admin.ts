@@ -70,7 +70,11 @@ export async function useShopifyAdmin<T extends object = JwtPayload>(
   const paramToken = getSessionTokenFromUrlParam(event)
   const sessionToken = headerToken || paramToken
 
-  if (!sessionToken) {
+  const standaloneSession = import.meta.dev
+    ? (event.context.shopifyStandalone as Session | undefined)
+    : undefined
+
+  if (!sessionToken && !standaloneSession) {
     // No session token — for document requests, redirect to auth
     const shop = getShopFromEvent(event)
     if (!shop) {
@@ -105,7 +109,15 @@ export async function useShopifyAdmin<T extends object = JwtPayload>(
   let shop: string
   let sessionId: string
 
-  if (config.distribution !== AppDistribution.ShopifyAdmin) {
+  if (standaloneSession && !sessionToken) {
+    shop = standaloneSession.shop
+    sessionId = standaloneSession.id
+  } else if (config.distribution !== AppDistribution.ShopifyAdmin) {
+    if (!sessionToken)
+      throw new HTTPError({
+        status: 401,
+        message: 'Shopify authentication required.'
+      })
     try {
       payload = await validateSessionToken(sessionToken)
     } catch {
@@ -147,6 +159,7 @@ export async function useShopifyAdmin<T extends object = JwtPayload>(
       // Embedded requests have a verified ID token and can reacquire access.
       // Never discard credentials on transient transport/storage errors.
       if (
+        Boolean(sessionToken) &&
         config.distribution !== AppDistribution.ShopifyAdmin &&
         (error as HTTPError).status === 401
       )
@@ -172,6 +185,11 @@ export async function useShopifyAdmin<T extends object = JwtPayload>(
       session = existingSession
     } else {
       // Token exchange for embedded apps
+      if (!sessionToken)
+        throw new HTTPError({
+          status: 401,
+          message: 'Standalone session expired. Reconnect from Shopify admin.'
+        })
       session = await performTokenExchange(
         api,
         config,

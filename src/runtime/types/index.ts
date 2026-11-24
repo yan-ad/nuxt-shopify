@@ -26,6 +26,9 @@ export enum AppDistribution {
 }
 
 export interface ModuleOptions {
+  /** App handle from shopify.app.toml, used to open the app in Shopify admin. */
+  appHandle?: string
+
   /**
    * The Shopify API key for your app.
    * Can also be set via `NUXT_SHOPIFY_API_KEY` env var.
@@ -240,6 +243,7 @@ export interface ShopifyServerConfig {
 }
 
 export interface ShopifyPublicConfig {
+  appHandle: string
   apiKey: string
   authPagePath: string
   authPathPrefix: string

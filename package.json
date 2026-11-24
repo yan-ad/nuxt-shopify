@@ -106,7 +106,8 @@
     "@shopify/shopify-app-session-storage": "^7.0.4",
     "@shopify/shopify-app-session-storage-memory": "^8.0.4",
     "isbot": "^5.2.3",
-    "nitro": "3.0.261103-rc"
+    "nitro": "3.0.261103-rc",
+    "smol-toml": "^1.9.1"
   },
   "devDependencies": {
     "@nuxt/module-builder": "^1.0.4",

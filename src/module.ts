@@ -20,6 +20,7 @@ import {
 } from './runtime/types'
 import { ApiVersion } from '@shopify/shopify-api'
 import { APP_BRIDGE_URL, POLARIS_URL } from './runtime/shared/polaris'
+import { resolveAppHandle } from './app-config'
 
 export type { ModuleOptions, PolarisIcon }
 
@@ -51,9 +52,15 @@ export default defineNuxtModule<ModuleOptions>({
       `🛍️ Shopify App Module upgraded! Please always read the docs https://github.com/yan-ad/nuxt-shopify`
     )
   },
-  setup(options, nuxt: Nuxt) {
+  async setup(options, nuxt: Nuxt) {
     const { resolve } = createResolver(import.meta.url)
     const logger = useLogger('@yan-ad/nuxt-shopify:module')
+    const appHandle = await resolveAppHandle(
+      nuxt.options.rootDir,
+      options.apiKey,
+      options.appHandle,
+      (message) => logger.warn(message)
+    )
 
     // Configure before Vue's SSR compiler is initialized, not in app:resolve.
     const isCustomElement = nuxt.options.vue.compilerOptions.isCustomElement
@@ -75,6 +82,11 @@ export default defineNuxtModule<ModuleOptions>({
       addServerHandler({
         route: '/_shopify/devtools/standalone',
         handler: resolve('./runtime/server/routes/devtools-standalone')
+      })
+      addPlugin({ src: resolve('./runtime/plugins/standalone'), order: -20 })
+      addServerHandler({
+        middleware: true,
+        handler: resolve('./runtime/server/routes/devtools-session')
       })
       extendPages((pages) => {
         pages.push({
@@ -134,6 +146,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Public config (safe to expose to client — only the API key)
     nuxt.options.runtimeConfig.public.shopify = {
+      appHandle,
       apiKey: options.apiKey,
       authPagePath: options.authPage !== false ? '/auth' : '',
       authPathPrefix: options.authPathPrefix || '/_shopify/auth',

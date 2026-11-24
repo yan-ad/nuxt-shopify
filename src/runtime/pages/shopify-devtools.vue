@@ -103,6 +103,8 @@ async function initialize() {
       const body = await response.json()
       if (!response.ok)
         throw new Error(body.message || 'Unable to connect standalone.')
+      window.location.replace('/')
+      return
     } catch (failure) {
       error.value =
         failure instanceof Error ? failure.message : 'Connection failed.'

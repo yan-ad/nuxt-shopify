@@ -2,10 +2,12 @@ import {
   defineNuxtRouteMiddleware,
   navigateTo,
   useCookie,
-  useRuntimeConfig
+  useRuntimeConfig,
+  useNuxtApp
 } from '#app'
 
 export default defineNuxtRouteMiddleware((to) => {
+  if (import.meta.dev && useNuxtApp().payload.shopifyStandalone) return
   const config = useRuntimeConfig().public.shopify
 
   const authPage = config.authPagePath || '/auth'

@@ -46,6 +46,12 @@ export async function useShopifyFetch(
 
     // Forward the Authorization header from the incoming request
     const authHeader = event?.headers.get('authorization')
+    if (import.meta.dev && event?.context.shopifyStandalone) {
+      const cookie = event.req.headers.get('cookie')
+      if (cookie) headers.cookie = cookie
+      const origin = event.req.headers.get('origin')
+      if (origin) headers.origin = origin
+    }
     if (authHeader) {
       headers['Authorization'] = authHeader
     }
@@ -78,10 +84,18 @@ export async function useShopifyFetch(
     )
   }
 
-  const token = await shopify.idToken()
+  const standalone =
+    import.meta.dev && Boolean(nuxtApp.payload.shopifyStandalone)
+  if (
+    standalone &&
+    new URL(String(url), window.location.origin).origin !==
+      window.location.origin
+  )
+    throw new Error('Standalone requests must target this app.')
+  const token = standalone ? undefined : await shopify.idToken()
 
   const headers = new Headers(opts.headers || {})
-  headers.set('Authorization', `Bearer ${token}`)
+  if (token) headers.set('Authorization', `Bearer ${token}`)
 
   let resolvedUrl = url as string
   if (query) {

@@ -11,6 +11,8 @@ import {
   revokeStandalone,
   STANDALONE_COOKIE
 } from '../utils/devtools-standalone'
+import { assertStandaloneOrigin } from '../utils/standalone-origin'
+import { getResolvedConfig } from '../services/shopify'
 
 export default defineHandler(async (event) => {
   if (!import.meta.dev) throw new HTTPError({ status: 404 })
@@ -18,12 +20,14 @@ export default defineHandler(async (event) => {
   if (!['POST', 'DELETE'].includes(event.req.method))
     throw new HTTPError({ status: 405 })
   // Do not allow cross-origin sites to redeem or revoke inspector connections.
-  if (event.req.headers.get('origin') !== new URL(event.req.url).origin)
-    throw new HTTPError({ status: 403 })
+  const publicOrigin = assertStandaloneOrigin(
+    event.req,
+    getResolvedConfig().appUrl
+  )
   if (event.req.method === 'DELETE') {
     const cookie = getCookie(event, STANDALONE_COOKIE)
     if (cookie) revokeStandalone(cookie)
-    deleteCookie(event, STANDALONE_COOKIE, { path: '/_shopify/devtools' })
+    deleteCookie(event, STANDALONE_COOKIE, { path: '/' })
     return { connected: false }
   }
   const body = await readBody<{ ticket?: unknown }>(event)
@@ -39,8 +43,8 @@ export default defineHandler(async (event) => {
   setCookie(event, STANDALONE_COOKIE, connection, {
     httpOnly: true,
     sameSite: 'strict',
-    secure: new URL(event.req.url).protocol === 'https:',
-    path: '/_shopify/devtools',
+    secure: new URL(publicOrigin).protocol === 'https:',
+    path: '/',
     maxAge: 1800
   })
   return { connected: true }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { navigateTo, useRuntimeConfig, useCookie } from '#app'
+import { shopifyAdminAppUrl } from '../shared/admin-app-url'
 import { definePageMeta, onMounted, onUnmounted, ref } from '#imports'
 import ShSection from '../components/polaris/Section.vue'
 import ShBox from '../components/polaris/Box.vue'
@@ -59,13 +60,8 @@ async function handleSubmit() {
 
   try {
     const config = useRuntimeConfig()
-    const authPrefix = config.public.shopify.authPathPrefix
-    const domain = value.includes('.myshopify.com')
-      ? value
-      : `${value}.myshopify.com`
-    await navigateTo(`${authPrefix}?shop=${encodeURIComponent(domain)}`, {
-      external: true
-    })
+    const target = shopifyAdminAppUrl(value, config.public.shopify.appHandle)
+    await navigateTo(target, { external: true, open: { target: '_top' } })
   } catch (e: any) {
     error.value = e.message || 'Something went wrong'
     loading.value = false
@@ -102,8 +98,8 @@ async function handleSubmit() {
 
               <ShHeading>Log in to <ShText>myshopify.com</ShText></ShHeading>
               <ShParagraph
-                >Enter your shop domain to log in or install this
-                app.</ShParagraph
+                >Enter your store to open this app in Shopify
+                admin.</ShParagraph
               >
             </div>
 
@@ -120,7 +116,7 @@ async function handleSubmit() {
                     :disabled="loading"
                   />
                 </ShStack>
-                <p v-if="error" class="shopify-login-error">
+                <p v-if="error" class="shopify-login-error" role="alert">
                   {{ error }}
                 </p>
               </div>
@@ -248,5 +244,10 @@ async function handleSubmit() {
 .shopify-login-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+body {
+  margin: 0 !important;
+  padding: 0;
 }
 </style>
