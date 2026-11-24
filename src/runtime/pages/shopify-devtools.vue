@@ -2,9 +2,13 @@
 import { ref, onMounted } from 'vue'
 import { withDevtoolsTimeout } from '../shared/devtools-bridge'
 import { findDevtoolsClient } from '../shared/devtools-client'
-import { definePageMeta } from '#imports'
+import { definePageMeta, useHead } from '#imports'
 
 definePageMeta({ layout: false })
+useHead({
+  htmlAttrs: { class: 'shopify-inspector-document' },
+  meta: [{ name: 'color-scheme', content: 'light dark' }]
+})
 interface StoreInfo {
   shop: {
     name: string
@@ -147,6 +151,35 @@ onMounted(refresh)
 </template>
 
 <style scoped>
+:global(html.shopify-inspector-document) {
+  color-scheme: light dark;
+  background: #f6f7f8;
+  color: #202223;
+  --inspector-background: #f6f7f8;
+  --inspector-surface: #fff;
+  --inspector-text: #202223;
+  --inspector-border: #d5d7da;
+  --inspector-link: #005bd3;
+  --inspector-error: #b42318;
+}
+@media (prefers-color-scheme: dark) {
+  :global(html.shopify-inspector-document) {
+    --inspector-background: #171719;
+    --inspector-surface: #222225;
+    --inspector-text: #ededf0;
+    --inspector-border: #45454b;
+    --inspector-link: #9bc3ff;
+    --inspector-error: #ff9b94;
+    background: #171719;
+    color: #ededf0;
+  }
+}
+:global(html.shopify-inspector-document body) {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--inspector-background);
+  color: var(--inspector-text);
+}
 .shopify-inspector {
   color-scheme: light dark;
   font:
@@ -155,7 +188,10 @@ onMounted(refresh)
   padding: 24px;
   max-width: 1100px;
   margin: auto;
-  color: light-dark(#202223, #eee);
+  color: var(--inspector-text);
+  background: var(--inspector-background);
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 header {
   display: flex;
@@ -180,13 +216,17 @@ p {
   color: light-dark(#526b36, #b0d68b);
 }
 section {
-  border: 1px solid light-dark(#ddd, #444);
+  border: 1px solid var(--inspector-border);
+  background: var(--inspector-surface);
   padding: 20px;
   border-radius: 12px;
   margin-block: 18px;
 }
 .error {
-  border-color: #b42318;
+  border-color: var(--inspector-error);
+}
+a {
+  color: var(--inspector-link);
 }
 dl {
   display: grid;
@@ -203,7 +243,7 @@ dd {
 button {
   border: 1px solid currentColor;
   border-radius: 8px;
-  background: transparent;
+  background: var(--inspector-surface);
   color: inherit;
   padding: 8px 14px;
   cursor: pointer;
@@ -226,7 +266,7 @@ ul {
   padding: 0;
 }
 li {
-  border: 1px solid light-dark(#ddd, #444);
+  border: 1px solid var(--inspector-border);
   border-radius: 6px;
   padding: 3px 8px;
 }
