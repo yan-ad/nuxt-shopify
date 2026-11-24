@@ -30,6 +30,9 @@ jobs:
           CI: '1'
           NITRO_PRESET: vercel
 
+      - name: Verify structured data and LLM discovery files
+        run: bun run ../scripts/check-docs-seo.ts .vercel/output
+
   lint:
     runs-on: ubuntu-latest
 
