@@ -7,6 +7,7 @@ import {
   getSessionStorage
 } from '../services/shopify'
 import { createAdminApiContext } from '../utils/clients'
+import { storeOfflineSession } from '../utils/offline-session'
 
 /**
  * Handle the OAuth callback from Shopify.
@@ -20,6 +21,7 @@ export default defineHandler(async (event) => {
 
   try {
     const callbackResponse = await api.auth.callback({
+      expiring: true,
       rawRequest: getShopifyNodeContext(event).req,
       rawResponse: getShopifyNodeContext(event).res
     })
@@ -27,7 +29,7 @@ export default defineHandler(async (event) => {
     const { session } = callbackResponse
 
     // Store the session
-    await sessionStorage.storeSession(session)
+    await storeOfflineSession(sessionStorage, session)
 
     // If using online tokens, also get and store an offline session
     if (config.useOnlineTokens && session.isOnline) {
@@ -65,11 +67,13 @@ export default defineHandler(async (event) => {
         statusText: 'Gone'
       })
     }
-    console.debug('[@yan-ad/nuxt-shopify] Auth callback error:', error)
+    console.debug('[@yan-ad/nuxt-shopify] Auth callback failed', {
+      name: error?.constructor?.name
+    })
     throw new HTTPError({
       status: 500,
-      statusText: 'Authentication failed',
-      data: { error: error.message }
+      message:
+        'Authentication failed. Authorize the app again or check server configuration.'
     })
   }
 })

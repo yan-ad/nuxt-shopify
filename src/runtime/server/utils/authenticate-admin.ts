@@ -7,6 +7,11 @@ import {
 } from '../services/shopify'
 import { createAdminApiContext } from './clients'
 import {
+  ensureOfflineSession,
+  storeOfflineSession,
+  exchangeOfflineSession
+} from './offline-session'
+import {
   getShopifyNodeContext,
   getSessionTokenHeader,
   getSessionTokenFromUrlParam,
@@ -127,9 +132,28 @@ export async function useShopifyAdmin<T extends object = JwtPayload>(
   }
 
   // Load existing session from storage
-  const existingSession = sessionId
+  let existingSession = sessionId
     ? await sessionStorage.loadSession(sessionId)
     : undefined
+
+  if (existingSession && !existingSession.isOnline) {
+    try {
+      existingSession = await ensureOfflineSession(
+        api,
+        sessionStorage,
+        existingSession
+      )
+    } catch (error) {
+      // Embedded requests have a verified ID token and can reacquire access.
+      // Never discard credentials on transient transport/storage errors.
+      if (
+        config.distribution !== AppDistribution.ShopifyAdmin &&
+        (error as HTTPError).status === 401
+      )
+        existingSession = undefined
+      else throw error
+    }
+  }
 
   let session: Session
 
@@ -208,39 +232,40 @@ async function performTokenExchange(
 ) {
   let onlineSession: Session
   try {
-    const result = await api.auth.tokenExchange({
-      shop,
-      sessionToken,
-      requestedTokenType: config.useOnlineTokens
-        ? RequestedTokenType.OnlineAccessToken
-        : RequestedTokenType.OfflineAccessToken
-    })
+    const result = config.useOnlineTokens
+      ? await api.auth.tokenExchange({
+          shop,
+          sessionToken,
+          requestedTokenType: RequestedTokenType.OnlineAccessToken
+        })
+      : {
+          session: await exchangeOfflineSession(
+            api,
+            sessionStorage,
+            shop,
+            sessionToken
+          )
+        }
     onlineSession = result.session
   } catch (error: unknown) {
-    const err = error as { response?: { body?: unknown }; message?: string }
     console.debug('[@yan-ad/nuxt-shopify] Token exchange failed:', {
       shop,
       requestedTokenType: config.useOnlineTokens
         ? RequestedTokenType.OnlineAccessToken
         : RequestedTokenType.OfflineAccessToken,
-      scopes: api.config.scopes?.toString(),
-      responseBody: err?.response?.body,
-      message: err?.message
+      scopes: api.config.scopes?.toString()
+      // Never log token endpoint bodies, which may contain credentials.
     })
     throw error
   }
 
   // Store the session
-  await sessionStorage.storeSession(onlineSession)
+  if (onlineSession.isOnline)
+    await storeOfflineSession(sessionStorage, onlineSession)
 
   // If using online tokens, also get and store an offline token
   if (config.useOnlineTokens) {
-    const { session: offlineSession } = await api.auth.tokenExchange({
-      shop,
-      sessionToken,
-      requestedTokenType: RequestedTokenType.OfflineAccessToken
-    })
-    await sessionStorage.storeSession(offlineSession)
+    await exchangeOfflineSession(api, sessionStorage, shop, sessionToken)
   }
 
   // Run afterAuth hook

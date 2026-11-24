@@ -2,6 +2,7 @@ import { getShopifyApi, getSessionStorage } from '../services/shopify'
 import { createAdminApiContext } from './clients'
 import type { AdminApiContext } from './clients'
 import type { Session } from '@shopify/shopify-api'
+import { ensureOfflineSession } from './offline-session'
 
 /**
  * Get an unauthenticated Admin API context for a given shop.
@@ -26,13 +27,15 @@ export async function useShopifyUnauthenticatedAdmin(shop: string): Promise<{
   const sessionStorage = getSessionStorage()
 
   const offlineId = api.session.getOfflineId(shop)
-  const session = await sessionStorage.loadSession(offlineId)
+  const storedSession = await sessionStorage.loadSession(offlineId)
 
-  if (!session) {
+  if (!storedSession) {
     throw new Error(
       `No offline session found for shop "${shop}". The shop must install the app first.`
     )
   }
+
+  const session = await ensureOfflineSession(api, sessionStorage, storedSession)
 
   const admin = createAdminApiContext(api, session)
 

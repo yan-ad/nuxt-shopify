@@ -1,5 +1,8 @@
 import type { Session, Shopify, ApiVersion } from '@shopify/shopify-api'
 import { HTTPError } from 'nitro/h3'
+import type { SessionStorage } from '@shopify/shopify-app-session-storage'
+import { ensureOfflineSession } from './offline-session'
+import { getSessionStorage } from '../services/shopify'
 import type {
   AdminOperations,
   AllOperations,
@@ -54,9 +57,18 @@ export interface AdminApiContext {
 export function createAdminApiContext(
   api: Shopify,
   session: Session,
-  onError?: (error: any) => void
+  onError?: (error: any) => void,
+  sessionStorage?: SessionStorage
 ): AdminApiContext {
   const graphql: GraphQLClient<AdminOperations> = async (query, options) => {
+    if (!session.isOnline && session.accessToken) {
+      const current = await ensureOfflineSession(
+        api,
+        sessionStorage || getSessionStorage(),
+        session
+      )
+      Object.assign(session, current)
+    }
     const client = new api.clients.Graphql({
       session,
       apiVersion: options?.apiVersion
@@ -77,7 +89,9 @@ export function createAdminApiContext(
             response?: { headers?: Record<string, string | string[]> }
           }
         ).response?.headers
-        const rawRequestId = headers?.['x-request-id']
+        const rawRequestId = Object.entries(headers || {}).find(
+          ([name]) => name.toLowerCase() === 'x-request-id'
+        )?.[1]
         const requestId = Array.isArray(rawRequestId)
           ? rawRequestId[0]
           : rawRequestId
@@ -93,7 +107,7 @@ export function createAdminApiContext(
           data: requestId ? { requestId } : undefined,
           message:
             code === 403
-              ? 'Shopify denied Admin API access. Confirm the app installation has the required scopes and your staff account can access this resource. Approve updated app permissions in Shopify admin, then reopen the app.'
+              ? `Shopify denied this Admin API request using an ${session.isOnline ? 'online' : 'offline'} token. Check installed access to determine whether basic shop queries also fail.${requestId ? ` Shopify request ID: ${requestId}.` : ''}`
               : 'Shopify rejected the Admin API access token. Reopen the app from Shopify admin to authenticate again.'
         })
       }
