@@ -2,9 +2,9 @@
 seo:
   title: Can we develop Shopify Apps with Nuxt? Yes you can.
   description:
-    Ship fast, flexible, and SEO-optimized documentation with beautiful
-    design out of the box. Docus brings together the best of the Nuxt ecosystem.
-    Powered by Nuxt UI.
+    Build Shopify apps with Nuxt 4 using authentication, expiring offline tokens,
+    webhooks, billing, Polaris v2 Vue components, and App Bridge. Independent
+    community-maintained module, not affiliated with Shopify Inc.
 ---
 
 ::u-page-hero

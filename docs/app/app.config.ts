@@ -1,7 +1,7 @@
 export default defineAppConfig({
   seo: {
     description:
-      'Easily integrate Shopify into your Nuxt 3 & 4 app. Build powerful e-commerce applications with Nuxt Shopify.'
+      'Build Shopify apps with Nuxt 4: authentication, expiring offline tokens, Admin API, webhooks, billing, Polaris v2 Vue components, and App Bridge. Independent community project.'
   },
 
   socials: {
