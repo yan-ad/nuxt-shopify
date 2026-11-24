@@ -1,6 +1,6 @@
 {
   "name": "@yan-ad/nuxt-shopify",
-  "version": "2.0.0",
+  "version": "1.3.1",
   "description": "Nuxt module for building Shopify apps — authentication, webhooks, billing, Polaris components, and App Bridge integration",
   "repository": {
     "url": "git+https://github.com/yan-ad/nuxt-shopify.git"
@@ -84,7 +84,7 @@
     "dev:build": "cd playground && nuxt build",
     "dev:docs": "cd playground && nuxt dev --open --port 3001",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && cd playground && nuxt prepare",
-    "release": "bun run lint && bun run test && bun run prepack && changelogen --release && npm publish --access public && git push --follow-tags",
+    "release": "bun run lint && bun run test && bun run prepack && changelogen --release --patch && npm publish --access public && git push --follow-tags",
     "lint": "oxlint .",
     "test": "vitest run",
     "test:watch": "vitest watch",

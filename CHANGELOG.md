@@ -1,77 +1,8 @@
 # Changelog
 
-## v2.0.0
+## v1.3.1
 
-[compare changes](https://github.com/yan-ad/nuxt-shopify/compare/v1.3.0...v2.0.0)
-
-### 🚀 Enhancements
-
-- **experimental:** Handling log with no tui to allow devtools 4 ([9122c48](https://github.com/yan-ad/nuxt-shopify/commit/9122c48))
-- **polaris:** Add components and live previews ([02be32b](https://github.com/yan-ad/nuxt-shopify/commit/02be32b))
-- **playground:** Add live store and product views ([08b4c21](https://github.com/yan-ad/nuxt-shopify/commit/08b4c21))
-- Add Admin API access diagnostics ([52c8ad1](https://github.com/yan-ad/nuxt-shopify/commit/52c8ad1))
-- Add expiring offline token support ([45bc4af](https://github.com/yan-ad/nuxt-shopify/commit/45bc4af))
-- Add Shopify store inspector to Nuxt DevTools ([bcec3b8](https://github.com/yan-ad/nuxt-shopify/commit/bcec3b8))
-- Add standalone DevTools inspector ([88f7ef7](https://github.com/yan-ad/nuxt-shopify/commit/88f7ef7))
-- Add "Open Standalone" development mode without admin.shopify.com for better debugging ([aa48007](https://github.com/yan-ad/nuxt-shopify/commit/aa48007))
-- Add experimental support dev mode standalone ([d0e3e77](https://github.com/yan-ad/nuxt-shopify/commit/d0e3e77))
-
-### 🩹 Fixes
-
-- Docus deployments ([0159736](https://github.com/yan-ad/nuxt-shopify/commit/0159736))
-- Tsconfig error ([78db3f1](https://github.com/yan-ad/nuxt-shopify/commit/78db3f1))
-- Deployment docs error ([dd13d38](https://github.com/yan-ad/nuxt-shopify/commit/dd13d38))
-- Vercel deploys ([76f7205](https://github.com/yan-ad/nuxt-shopify/commit/76f7205))
-- Font bunny cant download ([99ff436](https://github.com/yan-ad/nuxt-shopify/commit/99ff436))
-- Correct OAuth callback and DevTools setup ([e40215d](https://github.com/yan-ad/nuxt-shopify/commit/e40215d))
-- **docs:** Use local tsconfig for Vite builds ([a186591](https://github.com/yan-ad/nuxt-shopify/commit/a186591))
-- **docs:** Use generated Nuxt tsconfig for Vite ([5b9b246](https://github.com/yan-ad/nuxt-shopify/commit/5b9b246))
-- **docs:** Keep generated files in local build dir ([932db01](https://github.com/yan-ad/nuxt-shopify/commit/932db01))
-- **docs:** Isolate module type config from Vite ([f75eb55](https://github.com/yan-ad/nuxt-shopify/commit/f75eb55))
-- Node 22 causing broken ci build ([4822dd9](https://github.com/yan-ad/nuxt-shopify/commit/4822dd9))
-- Select the outer app bridge in DevTools ([253e67f](https://github.com/yan-ad/nuxt-shopify/commit/253e67f))
-- Run DevTools store requests in the app window ([52ff48c](https://github.com/yan-ad/nuxt-shopify/commit/52ff48c))
-- Support light and dark DevTools themes ([d2b8f9d](https://github.com/yan-ad/nuxt-shopify/commit/d2b8f9d))
-- Ssr hydration issue ([8097347](https://github.com/yan-ad/nuxt-shopify/commit/8097347))
-- Ssr hydration runtime helper ([affc774](https://github.com/yan-ad/nuxt-shopify/commit/affc774))
-- Type standalone context in Nuxt payload ([38fd0a7](https://github.com/yan-ad/nuxt-shopify/commit/38fd0a7))
-
-### 💅 Refactors
-
-- **devtools:** ⚠️  Pin devtools to v3 since authorization code doesnt show at the terminal logs ([1183f0d](https://github.com/yan-ad/nuxt-shopify/commit/1183f0d))
-
-### 📖 Documentation
-
-- Add live Polaris component previews ([8f1a70c](https://github.com/yan-ad/nuxt-shopify/commit/8f1a70c))
-- Add Polaris component playground controls ([6127bd1](https://github.com/yan-ad/nuxt-shopify/commit/6127bd1))
-- Refresh README and update documentation URL ([356b363](https://github.com/yan-ad/nuxt-shopify/commit/356b363))
-- Add Shopify affiliation disclaimer ([8a1da94](https://github.com/yan-ad/nuxt-shopify/commit/8a1da94))
-- Improve SEO and LLM documentation metadata ([912bd96](https://github.com/yan-ad/nuxt-shopify/commit/912bd96))
-
-### 🏡 Chore
-
-- Remove nuxt devtools from plugins ([e4a4931](https://github.com/yan-ad/nuxt-shopify/commit/e4a4931))
-- Upgrade Nuxt to 4.7 and update dependencies ([515bca0](https://github.com/yan-ad/nuxt-shopify/commit/515bca0))
-- Upgrade into nitro v3 and use h3 v2 ([1e46158](https://github.com/yan-ad/nuxt-shopify/commit/1e46158))
-- Upgrade docs dependencies and Node requirement ([9b17baf](https://github.com/yan-ad/nuxt-shopify/commit/9b17baf))
-- Pin playground Nuxt DevTools to 3.4.4 ([d9232b3](https://github.com/yan-ad/nuxt-shopify/commit/d9232b3))
-- Add Nuxt DevTools kit dependency ([ad286ad](https://github.com/yan-ad/nuxt-shopify/commit/ad286ad))
-
-### ✅ Tests
-
-- Use root tsconfig for unit tests ([8abea90](https://github.com/yan-ad/nuxt-shopify/commit/8abea90))
-
-### 🤖 CI
-
-- Build docs for Vercel in CI ([775679f](https://github.com/yan-ad/nuxt-shopify/commit/775679f))
-
-#### ⚠️ Breaking Changes
-
-- **devtools:** ⚠️  Pin devtools to v3 since authorization code doesnt show at the terminal logs ([1183f0d](https://github.com/yan-ad/nuxt-shopify/commit/1183f0d))
-
-### ❤️ Contributors
-
-- Yanuar ([@yan-ad](https://github.com/yan-ad))
+[compare changes](https://github.com/yan-ad/nuxt-shopify/compare/v2.0.0...v1.3.1)
 
 ## v1.3.0
 
