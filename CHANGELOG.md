@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.3.4
+
+[compare changes](https://github.com/yan-ad/nuxt-shopify/compare/v1.3.3...v1.3.4)
+
+### 🤖 CI
+
+- **docs:** Verify SEO and LLM discovery output ([591eb50](https://github.com/yan-ad/nuxt-shopify/commit/591eb50))
+
+### ❤️ Contributors
+
+- Yanuar ([@yan-ad](https://github.com/yan-ad))
+
 ## v1.3.3
 
 [compare changes](https://github.com/yan-ad/nuxt-shopify/compare/v1.3.2...v1.3.3)
