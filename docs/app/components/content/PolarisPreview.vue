@@ -20,7 +20,6 @@ const srcdoc = computed(() =>
     ? createPolarisPreviewDocument(props.example as PolarisExample)
     : ''
 )
-const started = ref(false)
 const revision = ref(0)
 </script>
 
@@ -40,7 +39,6 @@ const revision = ref(0)
         <p class="m-0 mt-1 text-sm text-muted">{{ demo.description }}</p>
       </div>
       <button
-        v-if="started"
         type="button"
         class="rounded-md border border-default px-3 py-1.5 text-sm hover:bg-elevated focus-visible:outline-2 focus-visible:outline-offset-2"
         @click="revision++"
@@ -49,30 +47,15 @@ const revision = ref(0)
       </button>
     </header>
     <iframe
-      v-if="started"
       :key="`${example}-${revision}`"
       :srcdoc="srcdoc"
       :title="`${demo.title} — interactive Polaris v2 example`"
+      loading="lazy"
       sandbox="allow-scripts"
       referrerpolicy="no-referrer"
       class="block w-full border-0 bg-white"
       :style="{ height: `${demo.height}px` }"
     />
-    <div
-      v-else
-      class="flex min-h-48 flex-col items-center justify-center gap-3 p-6 text-center"
-    >
-      <p class="m-0 text-sm text-muted">
-        Load real Polaris v2 components from Shopify’s CDN.
-      </p>
-      <button
-        type="button"
-        class="rounded-md bg-inverted px-4 py-2 text-sm font-medium text-inverted focus-visible:outline-2 focus-visible:outline-offset-2"
-        @click="started = true"
-      >
-        Load interactive preview
-      </button>
-    </div>
     <details class="border-t border-default">
       <summary
         class="cursor-pointer px-5 py-3 text-sm font-medium text-highlighted"

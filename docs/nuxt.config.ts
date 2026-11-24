@@ -3,6 +3,11 @@ import pkg from '../package.json'
 export default defineNuxtConfig({
   extends: ['docus'],
 
+  routeRules: {
+    '/polaris-wc': { redirect: { to: '/components', statusCode: 301 } },
+    '/polaris-wc/**': { redirect: { to: '/components/**', statusCode: 301 } }
+  },
+
   modules: ['@nuxt/ui', '@nuxtjs/critters'],
 
   components: {

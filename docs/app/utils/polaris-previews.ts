@@ -1,5 +1,8 @@
+import { componentExamples } from './polaris-component-examples'
+
 // Only reviewed, repository-authored examples can run in the preview frame.
 export const polarisExamples = {
+  ...componentExamples,
   buttons: {
     title: 'Actions',
     description: 'Click an action to update the status below.',
