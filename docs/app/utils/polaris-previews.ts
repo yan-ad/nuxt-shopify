@@ -1,3 +1,4 @@
+import { polarisProps } from './polaris-props'
 import { componentExamples } from './polaris-component-examples'
 
 // Only reviewed, repository-authored examples can run in the preview frame.
@@ -97,6 +98,9 @@ export function getPolarisExample(name: string) {
 
 export function createPolarisPreviewDocument(example: PolarisExample): string {
   const demo = polarisExamples[example]
+  const controls = Object.hasOwn(polarisProps, example)
+    ? polarisProps[example as keyof typeof polarisProps]
+    : []
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -105,7 +109,7 @@ export function createPolarisPreviewDocument(example: PolarisExample): string {
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src https://cdn.shopify.com 'unsafe-inline'; style-src 'unsafe-inline' https://cdn.shopify.com; font-src https://cdn.shopify.com; img-src https://cdn.shopify.com data:; connect-src https://cdn.shopify.com; base-uri 'none'; form-action 'none'">
 <title>Polaris preview: ${demo.title}</title>
 <style>
-body { margin: 0; padding: 28px; font: 14px system-ui, sans-serif; color: #202223; background: #fff; color-scheme: light; }
+body { margin: 0; padding: 24px; font: 14px system-ui, sans-serif; color: #202223; background: #fff; color-scheme: light; }
 [hidden] { display: none !important; }
 #load-status { margin: 0 0 20px; color: #616161; }
 #demo { max-width: 640px; margin-inline: auto; }
@@ -117,6 +121,38 @@ body { margin: 0; padding: 28px; font: 14px system-ui, sans-serif; color: #20222
 <p id="load-status" role="status">Loading Polaris from Shopify…</p>
 <main id="demo">${demo.html}</main>
 <script>
+const allowed = ${JSON.stringify(controls)};
+let propertyValues = {};
+function reportHeight() {
+  parent.postMessage({ type: 'polaris-height', example: '${example}', height: Math.ceil(document.body.getBoundingClientRect().height) }, '*');
+}
+new ResizeObserver(reportHeight).observe(document.body);
+
+function applyProperties() {
+  const element = document.querySelector('s-${example}');
+  if (!element || !customElements.get(element.localName)) return;
+  if (typeof propertyValues.slotText === 'string' && !element.children.length) element.textContent = propertyValues.slotText;
+  for (const control of allowed) {
+    if (!(control.name in propertyValues)) continue;
+    const key = control.name === 'modelValue' ? 'value' : control.name;
+    const value = propertyValues[control.name];
+    if (typeof value !== 'string' && typeof value !== 'boolean') continue;
+    if (value === '' || value === false) {
+      element.removeAttribute(key);
+      if (control.kind === 'boolean') element[key] = false;
+      else if (key === 'value') element[key] = '';
+    } else {
+      element[key] = control.kind === 'number' ? Number(value) : value;
+      element.setAttribute(key, String(value));
+    }
+  }
+}
+window.addEventListener('message', event => {
+  if (event.source !== parent || event.data?.type !== 'polaris-properties' || event.data.example !== '${example}') return;
+  if (!event.data.values || typeof event.data.values !== 'object') return;
+  propertyValues = event.data.values;
+  applyProperties();
+});
 const status = document.querySelector('#load-status');
 const demo = document.querySelector('#demo');
 const timeout = setTimeout(() => {
@@ -137,6 +173,7 @@ script.onload = async () => {
   demo.hidden = false;
   demo.dataset.ready = '';
   status.hidden = true;
+  applyProperties();
   ${demo.script}
 };
 document.head.appendChild(script);

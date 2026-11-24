@@ -22,8 +22,10 @@ describe('docs Polaris previews', () => {
           const example = content.match(
             /::polaris-preview\{example="([^"]+)"\}/
           )?.[1]
-          if (example) expect(getPolarisExample(example), path).toBeDefined()
-          else
+          if (example) {
+            expect(getPolarisExample(example), path).toBeDefined()
+            expect(content, path).not.toContain('## Usage')
+          } else
             expect(content, path).toContain(
               'requires an authenticated Shopify admin host'
             )
@@ -68,5 +70,9 @@ describe('docs Polaris previews', () => {
     expect(component).not.toContain('v-html')
     expect(component).not.toContain('Load interactive preview')
     expect(component).toContain('loading="lazy"')
+    expect(component).toContain('<MDC :value="markdown"')
+    expect(component).not.toContain('<pre')
+    expect(component).not.toContain('navigator.clipboard')
+    expect(component).toContain('<UFormField')
   })
 })

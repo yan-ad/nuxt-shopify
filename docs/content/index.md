@@ -158,7 +158,7 @@ What you get?
   :::u-page-feature
   ---
   icon: i-lucide-layout-template
-  to: /guides/polaris-components
+  to: /components
   ---
   #title
   [Polaris]{.text-primary} Web Components

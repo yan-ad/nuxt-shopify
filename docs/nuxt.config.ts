@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   extends: ['docus'],
 
   routeRules: {
+    '/guides/polaris-components': {
+      redirect: { to: '/components', statusCode: 301 }
+    },
     '/polaris-wc': { redirect: { to: '/components', statusCode: 301 } },
     '/polaris-wc/**': { redirect: { to: '/components/**', statusCode: 301 } }
   },
