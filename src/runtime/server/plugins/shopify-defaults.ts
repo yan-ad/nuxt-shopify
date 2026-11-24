@@ -1,4 +1,4 @@
-import { defineNitroPlugin } from 'nitropack/runtime'
+import { definePlugin } from 'nitro'
 import { MemorySessionStorage } from '@shopify/shopify-app-session-storage-memory'
 import { configureShopify, getResolvedConfig } from '../services/shopify'
 
@@ -8,7 +8,7 @@ import { configureShopify, getResolvedConfig } from '../services/shopify'
  * If the user calls `configureShopify()` in their own server plugin,
  * it will override these defaults (configureShopify resets cached singletons).
  */
-export default defineNitroPlugin(() => {
+export default definePlugin(() => {
   // Only set defaults if configureShopify() hasn't been called yet
   try {
     const config = getResolvedConfig()

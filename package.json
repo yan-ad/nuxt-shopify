@@ -99,8 +99,8 @@
     "@shopify/shopify-api": "^15.1.2",
     "@shopify/shopify-app-session-storage": "^7.0.4",
     "@shopify/shopify-app-session-storage-memory": "^8.0.4",
-    "h3": "^1.15.11",
-    "isbot": "^5.2.3"
+    "isbot": "^5.2.3",
+    "nitro": "3.0.261103-rc"
   },
   "devDependencies": {
     "@nuxt/module-builder": "^1.0.4",

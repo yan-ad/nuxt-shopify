@@ -1,11 +1,11 @@
 import { useNuxtApp, useRequestEvent } from '#app'
 import type { ShopifyGlobal } from '@shopify/app-bridge-types'
 import type {
-  NitroFetchRequest,
-  TypedInternalResponse,
-  AvailableRouterMethod
-} from 'nitropack/types'
-import type { RouterMethod } from 'h3'
+  TypedFetchRequest as NitroFetchRequest,
+  TypedServerResponse as TypedInternalResponse,
+  AvailableServerRouteMethod as AvailableRouterMethod,
+  ServerRouteMethod as RouterMethod
+} from '#app'
 
 type ShopifyFetchData<
   T,

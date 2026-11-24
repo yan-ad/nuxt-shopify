@@ -1,7 +1,7 @@
 import { nodeAdapterInitialized } from '@shopify/shopify-api/adapters/node'
 import { shopifyApi, type Shopify } from '@shopify/shopify-api'
 import type { SessionStorage } from '@shopify/shopify-app-session-storage'
-import { useRuntimeConfig } from '#imports'
+import { useRuntimeConfig } from 'nuxt/server'
 import type {
   ShopifyRuntimeConfig,
   ResolvedConfig,
@@ -26,9 +26,10 @@ const LIBRARY_VERSION = '1.0.0'
  * Call this in a Nitro plugin (`server/plugins/shopify.ts`):
  *
  * ```ts
+ * import { definePlugin } from 'nitro'
  * import { configureShopify } from '#shopify/server'
  *
- * export default defineNitroPlugin(() => {
+ * export default definePlugin(() => {
  *   configureShopify({
  *     sessionStorage: new PrismaSessionStorage(prisma),
  *     hooks: {

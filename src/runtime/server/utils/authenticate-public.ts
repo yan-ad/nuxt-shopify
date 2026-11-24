@@ -1,5 +1,5 @@
-import type { H3Event } from 'h3'
-import { createError } from 'h3'
+import type { H3Event } from 'nitro/h3'
+import { HTTPError } from 'nitro/h3'
 import {
   getSessionTokenHeader,
   getSessionTokenFromUrlParam,
@@ -14,7 +14,7 @@ import type { PublicContext } from '../../types'
  *
  * ```ts
  * // server/api/public/widgets.ts
- * export default defineEventHandler(async (event) => {
+ * export default defineHandler(async (event) => {
  *   const { sessionToken, cors } = await useShopifyPublic(event)
  *   const data = await getWidgets(sessionToken)
  *   return cors(new Response(JSON.stringify(data)))
@@ -27,9 +27,9 @@ export async function useShopifyPublic(event: H3Event): Promise<PublicContext> {
   const sessionToken = headerToken || paramToken
 
   if (!sessionToken) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Missing session token'
+    throw new HTTPError({
+      status: 401,
+      statusText: 'Missing session token'
     })
   }
 

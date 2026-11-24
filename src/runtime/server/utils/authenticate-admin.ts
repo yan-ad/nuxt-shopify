@@ -1,5 +1,5 @@
-import type { H3Event } from 'h3'
-import { getQuery, createError } from 'h3'
+import type { H3Event } from 'nitro/h3'
+import { getQuery, HTTPError } from 'nitro/h3'
 import {
   getShopifyApi,
   getResolvedConfig,
@@ -7,6 +7,7 @@ import {
 } from '../services/shopify'
 import { createAdminApiContext } from './clients'
 import {
+  getShopifyNodeContext,
   getSessionTokenHeader,
   getSessionTokenFromUrlParam,
   validateSessionToken,
@@ -28,7 +29,7 @@ import { AppDistribution } from '../../types'
  *
  * ```ts
  * // server/api/products.ts
- * export default defineEventHandler(async (event) => {
+ * export default defineHandler(async (event) => {
  *   const { admin, session } = await useShopifyAdmin(event)
  *   const response = await admin.graphql(`{ shop { name } }`)
  *   return response
@@ -44,18 +45,18 @@ export async function useShopifyAdmin<T extends object = JwtPayload>(
 
   // Handle bot requests
   if (isBotRequest(event)) {
-    throw createError({
-      statusCode: 410,
-      statusMessage: 'Gone'
+    throw new HTTPError({
+      status: 410,
+      statusText: 'Gone'
     })
   }
 
   // Handle OPTIONS requests (CORS preflight)
-  if (event.method === 'OPTIONS') {
+  if (event.req.method === 'OPTIONS') {
     ensureCORSHeaders(event)
-    throw createError({
-      statusCode: 204,
-      statusMessage: 'No Content'
+    throw new HTTPError({
+      status: 204,
+      statusText: 'No Content'
     })
   }
 
@@ -68,9 +69,9 @@ export async function useShopifyAdmin<T extends object = JwtPayload>(
     // No session token — for document requests, redirect to auth
     const shop = getShopFromEvent(event)
     if (!shop) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Missing shop parameter'
+      throw new HTTPError({
+        status: 400,
+        statusText: 'Missing shop parameter'
       })
     }
 
@@ -79,18 +80,18 @@ export async function useShopifyAdmin<T extends object = JwtPayload>(
     const host = query.host as string
     if (!host) {
       // Return App Bridge page for embedded apps
-      throw createError({
-        statusCode: 302,
-        statusMessage: 'Redirect',
+      throw new HTTPError({
+        status: 302,
+        statusText: 'Redirect',
         data: {
           redirect: `${config.auth.path}?shop=${shop}`
         }
       })
     }
 
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized - No session token'
+    throw new HTTPError({
+      status: 401,
+      statusText: 'Unauthorized - No session token'
     })
   }
 
@@ -103,9 +104,9 @@ export async function useShopifyAdmin<T extends object = JwtPayload>(
     try {
       payload = await validateSessionToken(sessionToken)
     } catch {
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Unauthorized - Invalid session token'
+      throw new HTTPError({
+        status: 401,
+        statusText: 'Unauthorized - Invalid session token'
       })
     }
     const dest = new URL(payload.dest)
@@ -120,8 +121,8 @@ export async function useShopifyAdmin<T extends object = JwtPayload>(
     sessionId =
       (await api.session.getCurrentId({
         isOnline: config.useOnlineTokens,
-        rawRequest: event.req,
-        rawResponse: event.res
+        rawRequest: getShopifyNodeContext(event).req,
+        rawResponse: getShopifyNodeContext(event).res
       })) || ''
   }
 
@@ -139,9 +140,9 @@ export async function useShopifyAdmin<T extends object = JwtPayload>(
     // Need to perform token exchange
     if (config.distribution === AppDistribution.ShopifyAdmin) {
       if (!existingSession) {
-        throw createError({
-          statusCode: 401,
-          statusMessage: 'No session found for this shop'
+        throw new HTTPError({
+          status: 401,
+          statusText: 'No session found for this shop'
         })
       }
       session = existingSession

@@ -1,5 +1,4 @@
-import { defineNitroPlugin } from 'nitropack/runtime'
-import { getQuery, setResponseHeader } from 'h3'
+import { definePlugin } from 'nitro'
 import { APP_BRIDGE_URL, POLARIS_URL, CDN_URL } from '../../shared/polaris'
 
 /**
@@ -11,15 +10,13 @@ import { APP_BRIDGE_URL, POLARIS_URL, CDN_URL } from '../../shared/polaris'
  *
  * @see https://github.com/Shopify/shopify-app-js/blob/main/packages/apps/shopify-app-react-router/src/server/authenticate/helpers/add-response-headers.ts
  */
-export default defineNitroPlugin((nitroApp) => {
-  nitroApp.hooks.hook('request', (event) => {
-    const query = getQuery(event)
-    const shop = typeof query.shop === 'string' ? query.shop : undefined
+export default definePlugin((nitroApp) => {
+  nitroApp.hooks.hook('response', (response, event) => {
+    const shop = new URL(event.req.url).searchParams.get('shop')
 
     // Link header — preconnect to CDN + preload App Bridge & Polaris scripts
     if (shop) {
-      setResponseHeader(
-        event,
+      response.headers.set(
         'Link',
         `<${CDN_URL}>; rel="preconnect", <${APP_BRIDGE_URL}>; rel="preload"; as="script", <${POLARIS_URL}>; rel="preload"; as="script"`
       )
@@ -27,14 +24,12 @@ export default defineNitroPlugin((nitroApp) => {
 
     // Content-Security-Policy — scope frame-ancestors to the requesting shop
     if (shop) {
-      setResponseHeader(
-        event,
+      response.headers.set(
         'Content-Security-Policy',
         `frame-ancestors https://${shop} https://admin.shopify.com https://*.spin.dev https://admin.myshopify.io https://admin.shop.dev;`
       )
     } else {
-      setResponseHeader(
-        event,
+      response.headers.set(
         'Content-Security-Policy',
         `frame-ancestors https://*.myshopify.com https://admin.shopify.com https://*.spin.dev https://admin.myshopify.io https://admin.shop.dev;`
       )

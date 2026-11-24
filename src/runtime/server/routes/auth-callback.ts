@@ -1,4 +1,6 @@
-import { defineEventHandler, getQuery, sendRedirect, createError } from 'h3'
+import { getShopifyNodeContext } from '../utils/helpers'
+import { defineHandler } from 'nitro'
+import { getQuery, redirect, HTTPError } from 'nitro/h3'
 import {
   getShopifyApi,
   getResolvedConfig,
@@ -10,7 +12,7 @@ import { createAdminApiContext } from '../utils/clients'
  * Handle the OAuth callback from Shopify.
  * Validates the callback, stores the session, and redirects to the app.
  */
-export default defineEventHandler(async (event) => {
+export default defineHandler(async (event) => {
   const api = getShopifyApi()
   const config = getResolvedConfig()
   const sessionStorage = getSessionStorage()
@@ -18,8 +20,8 @@ export default defineEventHandler(async (event) => {
 
   try {
     const callbackResponse = await api.auth.callback({
-      rawRequest: event.node.req,
-      rawResponse: event.node.res
+      rawRequest: getShopifyNodeContext(event).req,
+      rawResponse: getShopifyNodeContext(event).res
     })
 
     const { session } = callbackResponse
@@ -54,19 +56,19 @@ export default defineEventHandler(async (event) => {
 
     // Redirect to the app's root within the Shopify admin
     const redirectUrl = `${config.appUrl}?shop=${shop}&host=${host}`
-    return sendRedirect(event, redirectUrl, 302)
+    return redirect(redirectUrl, 302)
   } catch (error: any) {
     // BotActivityDetected is expected when non-browser clients hit the callback
     if (error.constructor?.name === 'BotActivityDetected') {
-      throw createError({
-        statusCode: 410,
-        statusMessage: 'Gone'
+      throw new HTTPError({
+        status: 410,
+        statusText: 'Gone'
       })
     }
     console.debug('[@yan-ad/nuxt-shopify] Auth callback error:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Authentication failed',
+    throw new HTTPError({
+      status: 500,
+      statusText: 'Authentication failed',
       data: { error: error.message }
     })
   }

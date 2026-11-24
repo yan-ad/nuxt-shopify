@@ -1,20 +1,22 @@
-import { defineEventHandler, getQuery, sendRedirect, createError } from 'h3'
+import { getShopifyNodeContext } from '../utils/helpers'
+import { defineHandler } from 'nitro'
+import { getQuery, redirect, HTTPError } from 'nitro/h3'
 import { getShopifyApi, getResolvedConfig } from '../services/shopify'
 
 /**
  * Handle the initial auth request.
  * For token exchange flow (embedded apps), this redirects to Shopify OAuth.
  */
-export default defineEventHandler(async (event) => {
+export default defineHandler(async (event) => {
   const api = getShopifyApi()
   const config = getResolvedConfig()
   const query = getQuery(event)
   const shop = query.shop as string
 
   if (!shop) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Missing shop parameter'
+    throw new HTTPError({
+      status: 400,
+      statusText: 'Missing shop parameter'
     })
   }
 
@@ -24,9 +26,9 @@ export default defineEventHandler(async (event) => {
     shop,
     callbackPath: config.auth.callbackPath,
     isOnline: false,
-    rawRequest: event.req,
-    rawResponse: event.res
+    rawRequest: getShopifyNodeContext(event).req,
+    rawResponse: getShopifyNodeContext(event).res
   })
 
-  return sendRedirect(event, authUrl)
+  return redirect(authUrl)
 })

@@ -1,5 +1,5 @@
-import type { H3Event } from 'h3'
-import { getHeader, readRawBody, createError } from 'h3'
+import type { H3Event } from 'nitro/h3'
+import { HTTPError } from 'nitro/h3'
 import {
   getShopifyApi,
   getResolvedConfig,
@@ -14,7 +14,7 @@ import type { WebhookContext } from '../../types'
  *
  * ```ts
  * // server/api/webhooks.ts
- * export default defineEventHandler(async (event) => {
+ * export default defineHandler(async (event) => {
  *   const { topic, shop, session, payload } = await useShopifyWebhook(event)
  *
  *   switch (topic) {
@@ -37,33 +37,33 @@ export async function useShopifyWebhook(
   const config = getResolvedConfig()
 
   // Only POST requests
-  if (event.method !== 'POST') {
-    throw createError({
-      statusCode: 405,
-      statusMessage: 'Method Not Allowed - Webhooks must be POST'
+  if (event.req.method !== 'POST') {
+    throw new HTTPError({
+      status: 405,
+      statusText: 'Method Not Allowed - Webhooks must be POST'
     })
   }
 
-  const topic = getHeader(event, 'x-shopify-topic')
-  const shop = getHeader(event, 'x-shopify-shop-domain')
-  const hmac = getHeader(event, 'x-shopify-hmac-sha256')
+  const topic = event.req.headers.get('x-shopify-topic')
+  const shop = event.req.headers.get('x-shopify-shop-domain')
+  const hmac = event.req.headers.get('x-shopify-hmac-sha256')
   const apiVersion =
-    getHeader(event, 'x-shopify-api-version') || config.apiVersion
+    event.req.headers.get('x-shopify-api-version') || config.apiVersion
 
   if (!topic || !shop || !hmac) {
-    throw createError({
-      statusCode: 400,
-      statusMessage:
+    throw new HTTPError({
+      status: 400,
+      statusText:
         'Missing required webhook headers (x-shopify-topic, x-shopify-shop-domain, x-shopify-hmac-sha256)'
     })
   }
 
   // Read the raw body for HMAC verification
-  const rawBody = await readRawBody(event)
+  const rawBody = await event.req.text()
   if (!rawBody) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Missing request body'
+    throw new HTTPError({
+      status: 400,
+      statusText: 'Missing request body'
     })
   }
 
@@ -75,9 +75,9 @@ export async function useShopifyWebhook(
 
   // Timing-safe comparison
   if (!safeCompare(generatedHmac, hmac)) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Webhook HMAC validation failed'
+    throw new HTTPError({
+      status: 401,
+      statusText: 'Webhook HMAC validation failed'
     })
   }
 
@@ -86,9 +86,9 @@ export async function useShopifyWebhook(
   try {
     payload = JSON.parse(rawBody)
   } catch {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid JSON in webhook body'
+    throw new HTTPError({
+      status: 400,
+      statusText: 'Invalid JSON in webhook body'
     })
   }
 

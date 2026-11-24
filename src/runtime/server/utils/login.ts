@@ -1,5 +1,5 @@
-import type { H3Event } from 'h3'
-import { readBody, getQuery, createError } from 'h3'
+import type { H3Event } from 'nitro/h3'
+import { readBody, getQuery, HTTPError } from 'nitro/h3'
 import { getResolvedConfig } from '../services/shopify'
 import { AppDistribution, type LoginError, LoginErrorType } from '../../types'
 
@@ -10,7 +10,7 @@ import { AppDistribution, type LoginError, LoginErrorType } from '../../types'
  *
  * ```ts
  * // server/api/auth/login.post.ts
- * export default defineEventHandler(async (event) => {
+ * export default defineHandler(async (event) => {
  *   const errors = await useShopifyLogin(event)
  *   if (errors) return errors
  *   // redirect happened — this won't be reached
@@ -23,15 +23,15 @@ export async function useShopifyLogin(
   const config = getResolvedConfig()
 
   if (config.distribution === AppDistribution.ShopifyAdmin) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Login is not available for ShopifyAdmin apps'
+    throw new HTTPError({
+      status: 400,
+      statusText: 'Login is not available for ShopifyAdmin apps'
     })
   }
 
   let shop: string | undefined
 
-  if (event.method === 'POST') {
+  if (event.req.method === 'POST') {
     const body = await readBody<{ shop?: string }>(event)
     shop = body?.shop
   } else {

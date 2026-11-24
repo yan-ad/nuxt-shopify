@@ -1,4 +1,5 @@
-import { defineEventHandler, setResponseHeader } from 'h3'
+import { defineHandler } from 'nitro'
+
 import { getResolvedConfig } from '../services/shopify'
 
 /**
@@ -6,7 +7,7 @@ import { getResolvedConfig } from '../services/shopify'
  * For embedded apps, this page loads App Bridge which provides a session token
  * via a search param, then redirects back to the original request.
  */
-export default defineEventHandler(async (event) => {
+export default defineHandler(async (event) => {
   const config = getResolvedConfig()
 
   const html = `<!DOCTYPE html>
@@ -30,6 +31,6 @@ export default defineEventHandler(async (event) => {
   </body>
 </html>`
 
-  setResponseHeader(event, 'content-type', 'text/html')
+  event.res.headers.set('content-type', 'text/html')
   return html
 })

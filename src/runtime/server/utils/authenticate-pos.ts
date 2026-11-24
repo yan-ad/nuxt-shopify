@@ -1,5 +1,5 @@
-import type { H3Event } from 'h3'
-import { createError } from 'h3'
+import type { H3Event } from 'nitro/h3'
+import { HTTPError } from 'nitro/h3'
 import {
   getSessionTokenHeader,
   getSessionTokenFromUrlParam,
@@ -17,7 +17,7 @@ export interface POSContext {
  *
  * ```ts
  * // server/api/pos/widgets.ts
- * export default defineEventHandler(async (event) => {
+ * export default defineHandler(async (event) => {
  *   const { sessionToken, cors } = await useShopifyPos(event)
  *   return cors(new Response(JSON.stringify({ shop: sessionToken.dest })))
  * })
@@ -29,9 +29,9 @@ export async function useShopifyPos(event: H3Event): Promise<POSContext> {
   const sessionToken = headerToken || paramToken
 
   if (!sessionToken) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Missing session token'
+    throw new HTTPError({
+      status: 401,
+      statusText: 'Missing session token'
     })
   }
 

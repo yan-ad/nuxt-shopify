@@ -12,9 +12,17 @@ A [Nuxt](https://nuxt.com/) module for building Shopify apps — authentication,
 
 ## Quick start
 
+Requires Nuxt **4.7+** and Nitro **v3** (currently a release candidate).
+For Node.js deployments, use **Node.js 22.22+** (Node 24 LTS recommended).
+Shopify OAuth uses the Node adapter and requires a Node-compatible server runtime.
+
 ```bash
+bun add nitro@3.0.261103-rc
 npx nuxi@latest module add @yan-ad/nuxt-shopify
 ```
+
+Declare `nitro` directly in your app's dependencies so Nuxt selects its Nitro v3
+server integration. Nitro v2 / H3 v1 are no longer supported by this module.
 
 Then configure your API credentials and app URL in `nuxt.config.ts`:
 

@@ -54,6 +54,21 @@ describe('@yan-ad/nuxt-shopify module', async () => {
   // ─── OAuth Routes ──────────────────────────────────────────────────
 
   describe('OAuth routes', () => {
+    it('redirects to Shopify with one callback origin and a state cookie', async () => {
+      const response = await fetch(url(`/_shopify/auth?shop=${TEST_SHOP}`), {
+        redirect: 'manual',
+        headers: { 'user-agent': BROWSER_UA }
+      })
+
+      expect(response.status).toBe(302)
+      const location = new URL(response.headers.get('location')!)
+      expect(location.hostname).toBe(TEST_SHOP)
+      expect(location.searchParams.get('redirect_uri')).toBe(
+        `${TEST_APP_URL}/_shopify/auth/callback`
+      )
+      expect(response.headers.get('set-cookie')).toContain('shopify_app_state')
+    })
+
     it('GET /_shopify/auth returns non-404', async () => {
       try {
         await $fetch('/_shopify/auth?shop=test.myshopify.com')

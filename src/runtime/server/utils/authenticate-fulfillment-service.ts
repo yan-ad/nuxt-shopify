@@ -1,5 +1,5 @@
-import type { H3Event } from 'h3'
-import { getHeader, readRawBody, createError } from 'h3'
+import type { H3Event } from 'nitro/h3'
+import { HTTPError } from 'nitro/h3'
 import { getShopifyApi, getSessionStorage } from '../services/shopify'
 import { createAdminApiContext } from './clients'
 
@@ -8,7 +8,7 @@ import { createAdminApiContext } from './clients'
  *
  * ```ts
  * // server/api/fulfillment-service.ts
- * export default defineEventHandler(async (event) => {
+ * export default defineHandler(async (event) => {
  *   const { admin, session } = await useShopifyFulfillmentService(event)
  *   return { success: true }
  * })
@@ -17,21 +17,21 @@ import { createAdminApiContext } from './clients'
 export async function useShopifyFulfillmentService(event: H3Event) {
   const api = getShopifyApi()
 
-  const shop = getHeader(event, 'x-shopify-shop-domain')
-  const hmac = getHeader(event, 'x-shopify-hmac-sha256')
+  const shop = event.req.headers.get('x-shopify-shop-domain')
+  const hmac = event.req.headers.get('x-shopify-hmac-sha256')
 
   if (!shop || !hmac) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Missing required headers'
+    throw new HTTPError({
+      status: 400,
+      statusText: 'Missing required headers'
     })
   }
 
-  const rawBody = await readRawBody(event)
+  const rawBody = await event.req.text()
   if (!rawBody) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Missing request body'
+    throw new HTTPError({
+      status: 400,
+      statusText: 'Missing request body'
     })
   }
 
@@ -42,9 +42,9 @@ export async function useShopifyFulfillmentService(event: H3Event) {
     .digest('base64')
 
   if (!safeCompare(generatedHmac, hmac)) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'HMAC validation failed'
+    throw new HTTPError({
+      status: 401,
+      statusText: 'HMAC validation failed'
     })
   }
 
@@ -54,9 +54,9 @@ export async function useShopifyFulfillmentService(event: H3Event) {
   const session = await sessionStorage.loadSession(offlineId)
 
   if (!session) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: `No session found for shop ${shop}`
+    throw new HTTPError({
+      status: 400,
+      statusText: `No session found for shop ${shop}`
     })
   }
 

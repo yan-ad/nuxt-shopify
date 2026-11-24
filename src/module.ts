@@ -230,13 +230,15 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.hook('ready', () => {
       const nitro = useNitro()
 
-      nitro.options.externals.inline = nitro.options.externals.inline || []
-      nitro.options.externals.inline.push(
+      const noExternals = nitro.options.noExternals
+      if (noExternals === true) return
+      nitro.options.noExternals = [
+        ...(noExternals || []),
         '@shopify/shopify-api',
         '@shopify/shopify-api/adapters/node',
         '@shopify/shopify-app-session-storage-memory',
         'isbot'
-      )
+      ]
     })
 
     // ─── Type Declarations ─────────────────────────────────────────────
