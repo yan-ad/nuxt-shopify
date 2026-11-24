@@ -19,6 +19,19 @@ Authentication, webhooks, billing, Polaris components, and App Bridge integratio
 
 A [Nuxt](https://nuxt.com/) module for building Shopify apps — authentication, webhooks, billing, Polaris components, and App Bridge integration. The Nuxt equivalent of `@shopify/shopify-app-react-router`.
 
+## Why this project exists
+
+We started this module to migrate [KiriminAja](https://apps.shopify.com/kiriminaja)
+from React Router / Remix to Nuxt. As Vue-based engineers, we want fast, simple
+**DX and UX**. Their roadmap and our experience with the ecosystem and community
+didn't align with that vision—**your experience may differ**.
+
+We're also looking toward **Vue Vapor Mode** and its fine-grained rendering.
+That's part of why **Nuxt 4.7+ is our mainline baseline**: experimental Vapor
+interop support began in [Nuxt 4.6](https://nuxt.com/blog/v4-6#vue-vapor-support).
+Vapor requires a compatible Vue 3.6+ release and remains experimental; this
+module does not yet guarantee Vapor compatibility.
+
 ## Built for the Shopify app workflow
 
 | Capability                | What you get                                                                                                                                  |
