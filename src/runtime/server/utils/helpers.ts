@@ -51,10 +51,12 @@ export async function validateSessionToken(
 export function ensureCORSHeaders(event: H3Event): void {
   const config = getResolvedConfig()
   event.res.headers.set('Access-Control-Allow-Origin', config.appUrl)
-  event.res.headers.set('Access-Control-Allow-Methods',
+  event.res.headers.set(
+    'Access-Control-Allow-Methods',
     'GET, POST, PUT, DELETE, OPTIONS'
   )
-  event.res.headers.set('Access-Control-Allow-Headers',
+  event.res.headers.set(
+    'Access-Control-Allow-Headers',
     'Content-Type, Authorization'
   )
   event.res.headers.set('Access-Control-Allow-Credentials', 'true')

@@ -11,10 +11,7 @@
     >
       {{ primaryAction.label }}
     </button>
-    <button
-      v-if="secondaryAction"
-      @click="secondaryAction.onClick"
-    >
+    <button v-if="secondaryAction" @click="secondaryAction.onClick">
       {{ secondaryAction.label }}
     </button>
   </ui-save-bar>
@@ -27,7 +24,7 @@ defineOptions({ inheritAttrs: false })
 
 const props = defineProps<{
   id: string
-  discardConfirmation?: boolean,
+  discardConfirmation?: boolean
   primaryAction?: {
     label: string
     onClick: () => void
@@ -42,5 +39,8 @@ const emit = defineEmits<{
   (e: 'show' | 'hide', event: Event): void
 }>()
 
-const polarisAttrs = usePolarisAttrs(props, ['primaryAction', 'secondaryAction'])
+const polarisAttrs = usePolarisAttrs(props, [
+  'primaryAction',
+  'secondaryAction'
+])
 </script>

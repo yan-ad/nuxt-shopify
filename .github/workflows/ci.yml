@@ -46,6 +46,9 @@ jobs:
       - name: Lint
         run: bun run lint
 
+      - name: Check source formatting
+        run: bun run format:code:check
+
   test:
     runs-on: ubuntu-latest
 

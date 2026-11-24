@@ -6,5 +6,16 @@
   "trailingComma": "none",
   "printWidth": 80,
   "sortPackageJson": false,
-  "ignorePatterns": []
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.nuxt/**",
+    "**/.output/**",
+    "**/.cache/**",
+    "**/.data/**",
+    "**/.vercel/**",
+    "**/coverage/**",
+    "**/bun.lock",
+    "playground/.shopify/**"
+  ]
 }

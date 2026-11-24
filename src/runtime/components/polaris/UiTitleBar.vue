@@ -8,11 +8,7 @@
     >
       {{ primaryAction.label }}
     </button>
-    <button
-      v-if="breadcrumb"
-      variant="breadcrumb"
-      @click="breadcrumb.onClick"
-    >
+    <button v-if="breadcrumb" variant="breadcrumb" @click="breadcrumb.onClick">
       {{ breadcrumb.label }}
     </button>
     <button
@@ -44,5 +40,9 @@ const props = defineProps<{
   actions?: TitleBarAction[]
 }>()
 
-const polarisAttrs = usePolarisAttrs(props, ['primaryAction', 'breadcrumb', 'actions'])
+const polarisAttrs = usePolarisAttrs(props, [
+  'primaryAction',
+  'breadcrumb',
+  'actions'
+])
 </script>

@@ -3,7 +3,9 @@ title: Polaris Web Components
 description: Shopify Polaris web components wrapped for Nuxt with Vue bindings.
 ---
 
-Browse the available Polaris web components by category.
+Browse the available Polaris v2.0 web components by category. The module loads the stable `polaris-2.js` CDN release.
+
+Newly covered components include [EmptyState](/polaris-wc/feedback/empty-state), [Progress](/polaris-wc/feedback/progress), and [Number](/polaris-wc/content/number).
 
 ::card-group
 
@@ -20,7 +22,7 @@ TextField, Select, Checkbox, Choice, and more — collect user input.
 ::
 
 ::card{title="Feedback" icon="i-lucide-message-circle" to="/polaris-wc/feedback/banner"}
-Banner, Badge, Spinner, and Tooltip — communicate status and information.
+Banner, Badge, Spinner, Tooltip, EmptyState, and Progress — communicate status and information.
 ::
 
 ::card{title="Navigation" icon="i-lucide-compass" to="/polaris-wc/navigation/app-nav"}
@@ -32,7 +34,7 @@ Table, TableHeader, TableBody, TableRow, and TableCell — display structured da
 ::
 
 ::card{title="Content" icon="i-lucide-type" to="/polaris-wc/content/text"}
-Text, Heading, Icon, Image, Thumbnail, Avatar, Chip, and List — render content.
+Text, Number, Heading, Icon, Image, Thumbnail, Avatar, Chip, and List — render content.
 ::
 
 ::card{title="Overlays" icon="i-lucide-layers" to="/polaris-wc/overlays/modal"}

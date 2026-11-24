@@ -27,14 +27,8 @@ function copy() {
     <template #leading>
       <UIcon name="i-ph-terminal" />
     </template>
-    <template
-      v-if="props.source?.length"
-      #trailing
-    >
-      <UTooltip
-        text="Copy to clipboard"
-        :content="{ side: 'right' }"
-      >
+    <template v-if="props.source?.length" #trailing>
+      <UTooltip text="Copy to clipboard" :content="{ side: 'right' }">
         <UButton
           :color="copied ? 'success' : 'neutral'"
           variant="link"

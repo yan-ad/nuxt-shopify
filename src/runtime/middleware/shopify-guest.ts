@@ -1,4 +1,9 @@
-import { defineNuxtRouteMiddleware, useRuntimeConfig, useCookie, navigateTo } from '#app'
+import {
+  defineNuxtRouteMiddleware,
+  useRuntimeConfig,
+  useCookie,
+  navigateTo
+} from '#app'
 
 export default defineNuxtRouteMiddleware(() => {
   const config = useRuntimeConfig().public.shopify

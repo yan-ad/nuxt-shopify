@@ -12,6 +12,7 @@ defineOptions({ inheritAttrs: false })
 const props = defineProps<{
   src?: string
   alt?: string
+  loading?: 'eager' | 'lazy'
   size?: 'small' | 'small-100' | 'small-200' | 'base' | 'large' | 'large-100'
 }>()
 

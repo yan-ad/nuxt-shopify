@@ -54,6 +54,13 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url)
     const logger = useLogger('@yan-ad/nuxt-shopify:module')
 
+    // Configure before Vue's SSR compiler is initialized, not in app:resolve.
+    const isCustomElement = nuxt.options.vue.compilerOptions.isCustomElement
+    nuxt.options.vue.compilerOptions.isCustomElement = (tag) =>
+      tag.startsWith('s-') ||
+      tag.startsWith('ui-') ||
+      Boolean(isCustomElement?.(tag))
+
     if (nuxt.options.dev) {
       // Shopify CLI captures Nuxt's output but cannot display its auth prompt.
       // Disable the DevTools browser authorization gate for local development.
@@ -145,12 +152,6 @@ export default defineNuxtModule<ModuleOptions>({
         },
         ...(nuxt.options.app.head.script || [])
       ]
-
-      logger.info('Configuring Vue to recognize Shopify web components...')
-      nuxt.options.vue.compilerOptions.isCustomElement = (tag) => {
-        // Match Shopify Polaris (s-*) and App Bridge (ui-*) web component tags
-        return tag.startsWith('s-') || tag.startsWith('ui-')
-      }
     })
 
     // ─── Client Plugin ─────────────────────────────────────────────────

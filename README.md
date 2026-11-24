@@ -65,7 +65,7 @@ bun run dev
 # Build the playground
 bun run dev:build
 
-# Run ESLint
+# Run Oxlint (or apply safe fixes with bun run lint:fix)
 bun run lint
 
 # Run Vitest
@@ -75,5 +75,31 @@ bun run test:watch
 # Release new version
 bun run release
 ```
+
+### Formatting in Zed
+
+Run `bun install` and open the **repository root** in Zed. Install the
+[Oxc extension](https://zed.dev/extensions/oxc) for Oxlint diagnostics and safe
+fixes, plus the Vue extension for Vue language support. Restart language servers
+after changing `.zed/settings.json`.
+
+Saving Vue, TypeScript, TSX, JavaScript, or JSX runs safe Oxlint fixes first, then
+the project-local Oxfmt formatter. Prettier fallback is disabled. Formatting uses
+`bun run --silent format:stdin --stdin-filepath <file>` with the editor buffer on
+stdin; it does not download a formatter on save. Bun must be available to Zed.
+
+The shared `.oxfmtrc.json` uses two spaces, single quotes, no semicolons, and an
+80-column print width. Vue templates, scripts, and styles are formatted together.
+Generated output and dependencies are excluded.
+
+```bash
+bun run format:code       # Format all Vue/TS/JS source files
+bun run format:code:check # Check source formatting without writing
+bun run lint:fix          # Apply safe lint fixes
+bun run format           # Format all supported files, including docs
+```
+
+If formatting does not run, check `zed: open log`, confirm Bun is on Zed's PATH,
+and run `editor: format` to test the configured formatter manually.
 
 </details>

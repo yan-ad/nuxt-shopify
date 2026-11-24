@@ -20,6 +20,52 @@ describe('@yan-ad/nuxt-shopify module', async () => {
     rootDir: fileURLToPath(new URL('./fixtures/basic', import.meta.url))
   })
 
+  describe('Polaris v2 components', () => {
+    it('auto-registers EmptyState and preserves native slot placement', async () => {
+      const html = await $fetch('/')
+      expect(html).toContain('<s-empty-state')
+      expect(html).toContain('heading="Add your first product"')
+      expect(html).toContain('data-testid="empty-state"')
+      for (const slot of [
+        'graphic',
+        'subheading',
+        'primary-action',
+        'secondary-actions'
+      ]) {
+        expect(html).toContain(`slot="${slot}"`)
+      }
+      expect(html).toContain('Add products to start selling.')
+    })
+
+    it('preserves zero progress and leaves indeterminate value unset', async () => {
+      const html = await $fetch('/')
+      const determinate = html.match(
+        /<s-progress[^>]*id="determinate"[^>]*>/
+      )?.[0]
+      const indeterminate = html.match(
+        /<s-progress[^>]*id="indeterminate"[^>]*>/
+      )?.[0]
+      expect(determinate).toContain('value="0"')
+      expect(determinate).toContain('max="5"')
+      expect(determinate).toContain('tone="info"')
+      expect(indeterminate).toBeDefined()
+      expect(indeterminate).not.toMatch(/\svalue=/)
+      expect(indeterminate).not.toMatch(/\smax=/)
+    })
+
+    it('renders Number content and forwards typography props', async () => {
+      const html = await $fetch('/')
+      expect(html).toMatch(/<s-number[^>]*>[\s\S]*?17,660[\s\S]*?<\/s-number>/)
+      expect(html).toContain('fontSize="large"')
+      expect(html).toContain('fontWeight="bold"')
+    })
+
+    it('forwards Thumbnail lazy loading', async () => {
+      const html = await $fetch('/')
+      expect(html).toMatch(/<s-thumbnail[^>]*loading="lazy"/)
+    })
+  })
+
   // ─── Module Setup & SSR Head Tags ──────────────────────────────────
 
   describe('module setup', () => {
@@ -41,7 +87,7 @@ describe('@yan-ad/nuxt-shopify module', async () => {
 
     it('includes Polaris CDN script', async () => {
       const html = await $fetch('/')
-      expect(html).toContain('cdn.shopify.com/shopifycloud/polaris')
+      expect(html).toContain('cdn.shopify.com/shopifycloud/polaris-2.js')
     })
 
     it('includes CSP frame-ancestors header', async () => {
