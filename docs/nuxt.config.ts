@@ -43,7 +43,7 @@ export default defineNuxtConfig({
 
   site: {
     name: 'Shopify App Nuxt',
-    url: 'https://shopify-app-nuxt.vercel.app'
+    url: 'https://shopify.yan.ad'
   },
 
   runtimeConfig: {
@@ -77,7 +77,7 @@ export default defineNuxtConfig({
   },
 
   llms: {
-    domain: 'shopify-app-nuxt.vercel.app'
+    domain: 'shopify.yan.ad'
   },
 
   ogImage: {
