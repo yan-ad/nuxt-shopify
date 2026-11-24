@@ -11,11 +11,6 @@ interface ProductsData {
       title: string
       status: string
       vendor: string
-      featuredMedia: {
-        preview: {
-          image: { url: string; altText: string | null } | null
-        } | null
-      } | null
     }>
     pageInfo: { hasNextPage: boolean; endCursor: string | null }
   }
@@ -23,11 +18,17 @@ interface ProductsData {
 
 export default defineHandler(async (event) => {
   const { admin, session } = await useShopifyAdmin(event)
-  const grantedScopes = new Set(session.scope?.split(',').map(scope => scope.trim()))
-  if (!grantedScopes.has('read_products') && !grantedScopes.has('write_products')) {
+  const grantedScopes = new Set(
+    session.scope?.split(',').map((scope) => scope.trim())
+  )
+  if (
+    !grantedScopes.has('read_products') &&
+    !grantedScopes.has('write_products')
+  ) {
     throw new HTTPError({
       status: 403,
-      message: 'This app installation has not granted product access. Add read_products to the Shopify app access_scopes, approve the updated permissions in your development store, and reopen the app. Restarting Nuxt alone does not grant access.'
+      message:
+        'This app installation has not granted product access. Add read_products to the Shopify app access_scopes, approve the updated permissions in your development store, and reopen the app. Restarting Nuxt alone does not grant access.'
     })
   }
   const { first = '20', after, search = '', status = 'all' } = getQuery(event)

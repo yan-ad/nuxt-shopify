@@ -1,7 +1,7 @@
 export const PRODUCTS_QUERY = `#graphql
 query PlaygroundProducts($first: Int!, $after: String, $query: String) {
   products(first: $first, after: $after, query: $query, sortKey: TITLE) {
-    nodes { id title status vendor featuredMedia { preview { image { url altText } } } }
+    nodes { id title status vendor }
     pageInfo { hasNextPage endCursor }
   }
 }`

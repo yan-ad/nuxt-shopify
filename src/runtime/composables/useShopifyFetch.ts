@@ -101,9 +101,12 @@ export async function useShopifyFetch(
   })
 
   if (!fetchResponse.ok) {
-    const errorBody = await fetchResponse.json().catch(() => null) as { message?: string } | null
+    const errorBody = (await fetchResponse.json().catch(() => null)) as {
+      message?: string
+    } | null
     throw new Error(
-      errorBody?.message || `Shopify request failed (${fetchResponse.status}). Please try again.`
+      errorBody?.message ||
+        `Shopify request failed (${fetchResponse.status}). Please try again.`
     )
   }
 

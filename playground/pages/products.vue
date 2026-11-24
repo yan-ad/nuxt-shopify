@@ -3,6 +3,20 @@ import { defaultSettings } from '../shared/settings'
 
 definePageMeta({ middleware: 'shopify-auth', layout: 'auth' })
 const search = ref('')
+const access = ref('')
+const checkingAccess = ref(false)
+async function checkAccess() {
+  checkingAccess.value = true
+  try {
+    const result = await useShopifyFetch('/api/access')
+    access.value = JSON.stringify(result.data, null, 2)
+  } catch (error) {
+    access.value =
+      error instanceof Error ? error.message : 'Access check failed'
+  } finally {
+    checkingAccess.value = false
+  }
+}
 const status = ref('all')
 const pageSize = ref(defaultSettings.pageSize)
 const cursor = ref<string | null>(null)
@@ -108,6 +122,10 @@ function productUrl(id: string) {
       <ShBanner v-if="error" heading="Could not load products" tone="critical">
         <ShParagraph>{{ error.message }}</ShParagraph>
         <ShButton @click="refresh()">Try again</ShButton>
+        <ShButton :loading="checkingAccess" @click="checkAccess"
+          >Check installed access</ShButton
+        >
+        <pre v-if="access" role="status">{{ access }}</pre>
       </ShBanner>
       <ShSection v-else heading="Products from Shopify">
         <p v-if="loading" role="status">Loading products…</p>
@@ -128,15 +146,7 @@ function productUrl(id: string) {
             <ShTableRow v-for="product in products?.nodes" :key="product.id">
               <ShTableCell
                 ><ShStack direction="inline" gap="small"
-                  ><ShThumbnail
-                    v-if="product.featuredMedia?.preview?.image"
-                    :src="product.featuredMedia?.preview?.image.url"
-                    :alt="
-                      product.featuredMedia?.preview?.image.altText ||
-                      product.title
-                    "
-                    loading="lazy"
-                  /><ShLink :href="productUrl(product.id)">{{
+                  ><ShLink :href="productUrl(product.id)">{{
                     product.title
                   }}</ShLink></ShStack
                 ></ShTableCell

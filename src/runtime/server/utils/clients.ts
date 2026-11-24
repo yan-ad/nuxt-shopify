@@ -72,11 +72,29 @@ export function createAdminApiContext(
       if (onError) onError(error)
       const code = (error as { response?: { code?: number } })?.response?.code
       if (code === 401 || code === 403) {
+        const headers = (
+          error as {
+            response?: { headers?: Record<string, string | string[]> }
+          }
+        ).response?.headers
+        const rawRequestId = headers?.['x-request-id']
+        const requestId = Array.isArray(rawRequestId)
+          ? rawRequestId[0]
+          : rawRequestId
+        console.warn('[@yan-ad/nuxt-shopify] Admin API access rejected', {
+          status: code,
+          shop: session.shop,
+          tokenType: session.isOnline ? 'online' : 'offline',
+          scopes: session.scope,
+          requestId
+        })
         throw new HTTPError({
           status: code,
-          message: code === 403
-            ? 'Shopify denied Admin API access. Confirm the app installation has the required scopes and your staff account can access this resource. Approve updated app permissions in Shopify admin, then reopen the app.'
-            : 'Shopify rejected the Admin API access token. Reopen the app from Shopify admin to authenticate again.'
+          data: requestId ? { requestId } : undefined,
+          message:
+            code === 403
+              ? 'Shopify denied Admin API access. Confirm the app installation has the required scopes and your staff account can access this resource. Approve updated app permissions in Shopify admin, then reopen the app.'
+              : 'Shopify rejected the Admin API access token. Reopen the app from Shopify admin to authenticate again.'
         })
       }
       throw error
