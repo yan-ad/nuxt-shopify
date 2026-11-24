@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import type { ShopifyGlobal } from '@shopify/app-bridge-types'
+import {
+  findDevtoolsBridge,
+  withDevtoolsTimeout
+} from '../shared/devtools-bridge'
 import { definePageMeta } from '#imports'
 
 definePageMeta({ layout: false })
@@ -31,32 +34,30 @@ const data = ref<StoreInfo>()
 const loading = ref(false)
 const error = ref('')
 async function findAppToken(): Promise<string> {
-  // DevTools can nest the inspector below its own iframe. Do not message arbitrary origins.
-  let current: Window = window.parent
-  for (let depth = 0; depth < 8; depth++) {
-    try {
-      if (current.location.origin !== window.location.origin) break
-      const bridge = (current as Window & { shopify?: ShopifyGlobal }).shopify
-      if (bridge?.config?.shop) return await bridge.idToken()
-      if (current === current.parent) break
-      current = current.parent
-    } catch {
-      break
-    }
-  }
-  throw new Error(
-    'Open Nuxt DevTools from the app running inside Shopify admin. The inspector needs an authenticated App Bridge session; it cannot connect from a standalone localhost tab.'
+  const bridge = findDevtoolsBridge(window.parent, window.location.origin)
+  if (!bridge)
+    throw new Error(
+      'Open Nuxt DevTools from the app inside Shopify admin. No authenticated parent App Bridge was found.'
+    )
+  return withDevtoolsTimeout(
+    () => bridge.idToken(),
+    8000,
+    'Shopify did not provide an ID token within 8 seconds. Refresh the app inside Shopify admin, then retry the inspector.'
   )
 }
 async function refresh() {
   if (loading.value) return
   loading.value = true
   error.value = ''
+  const controller = new AbortController()
+  let timer: ReturnType<typeof setTimeout> | undefined
   try {
     const token = await findAppToken()
+    timer = setTimeout(() => controller.abort(), 15000)
     const response = await fetch('/_shopify/devtools/store', {
       headers: { Authorization: `Bearer ${token}` },
-      cache: 'no-store'
+      cache: 'no-store',
+      signal: controller.signal
     })
     const body = await response.json()
     if (!response.ok)
@@ -65,11 +66,13 @@ async function refresh() {
       )
     data.value = body
   } catch (failure) {
-    error.value =
-      failure instanceof Error
+    error.value = controller.signal.aborted
+      ? 'The store request timed out after 15 seconds. Check the Nuxt server logs and retry.'
+      : failure instanceof Error
         ? failure.message
         : 'Unable to load store information.'
   } finally {
+    clearTimeout(timer)
     loading.value = false
   }
 }
@@ -83,7 +86,7 @@ onMounted(refresh)
   <main class="shopify-inspector">
     <header>
       <div>
-        <p class="eyebrow">NUXT SHOPIFY · DEVELOPMENT</p>
+        <p class="eyebrow">@yan-ad/nuxt-shopify · DEVELOPMENT</p>
         <h1>Store inspector</h1>
         <p>
           Live, read-only information from your authenticated Shopify
@@ -195,7 +198,6 @@ p {
 }
 .eyebrow {
   font-size: 11px;
-  letter-spacing: 0.12em;
   color: light-dark(#526b36, #b0d68b);
 }
 section {
