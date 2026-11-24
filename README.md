@@ -36,6 +36,8 @@ A [Nuxt](https://nuxt.com/) module for building Shopify apps — authentication,
 
 ## Quick start
 
+This package is **ESM-only**. Use Nuxt module registration or JavaScript `import`; CommonJS `require()` entry points are not supported.
+
 ### 1. Install
 
 Requires **Nuxt 4.7+**, **Nitro v3**, and a **Node-compatible server runtime** for Shopify OAuth. Use **Node.js 22.22+**; Node 24 LTS is recommended.
