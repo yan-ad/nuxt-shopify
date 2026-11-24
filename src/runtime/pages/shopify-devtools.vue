@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import {
-  findDevtoolsBridge,
-  withDevtoolsTimeout
-} from '../shared/devtools-bridge'
+import { withDevtoolsTimeout } from '../shared/devtools-bridge'
+import { findDevtoolsClient } from '../shared/devtools-client'
 import { definePageMeta } from '#imports'
 
 definePageMeta({ layout: false })
@@ -33,46 +31,27 @@ interface StoreInfo {
 const data = ref<StoreInfo>()
 const loading = ref(false)
 const error = ref('')
-async function findAppToken(): Promise<string> {
-  const bridge = findDevtoolsBridge(window.parent, window.location.origin)
-  if (!bridge)
-    throw new Error(
-      'Open Nuxt DevTools from the app inside Shopify admin. No authenticated parent App Bridge was found.'
-    )
-  return withDevtoolsTimeout(
-    () => bridge.idToken(),
-    8000,
-    'Shopify did not provide an ID token within 8 seconds. Refresh the app inside Shopify admin, then retry the inspector.'
-  )
-}
 async function refresh() {
   if (loading.value) return
   loading.value = true
   error.value = ''
-  const controller = new AbortController()
-  let timer: ReturnType<typeof setTimeout> | undefined
   try {
-    const token = await findAppToken()
-    timer = setTimeout(() => controller.abort(), 15000)
-    const response = await fetch('/_shopify/devtools/store', {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: 'no-store',
-      signal: controller.signal
-    })
-    const body = await response.json()
-    if (!response.ok)
+    const client = findDevtoolsClient(window.parent, window.location.origin)
+    if (!client)
       throw new Error(
-        body.message || `Store request failed (${response.status}).`
+        'The parent app transport is unavailable. Restart Nuxt, reload the app inside Shopify admin, then reopen DevTools.'
       )
-    data.value = body
+    data.value = (await withDevtoolsTimeout(
+      () => client(),
+      22000,
+      'The parent app did not respond within 22 seconds. Reload the Shopify app and retry.'
+    )) as StoreInfo
   } catch (failure) {
-    error.value = controller.signal.aborted
-      ? 'The store request timed out after 15 seconds. Check the Nuxt server logs and retry.'
-      : failure instanceof Error
+    error.value =
+      failure instanceof Error
         ? failure.message
         : 'Unable to load store information.'
   } finally {
-    clearTimeout(timer)
     loading.value = false
   }
 }

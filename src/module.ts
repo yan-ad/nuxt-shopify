@@ -63,6 +63,10 @@ export default defineNuxtModule<ModuleOptions>({
       Boolean(isCustomElement?.(tag))
 
     if (nuxt.options.dev) {
+      addPlugin({
+        src: resolve('./runtime/plugins/devtools.client'),
+        mode: 'client'
+      })
       extendPages((pages) => {
         pages.push({
           name: 'shopify-devtools',
