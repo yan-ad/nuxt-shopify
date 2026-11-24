@@ -1,4 +1,5 @@
 import type { Session, Shopify, ApiVersion } from '@shopify/shopify-api'
+import { HTTPError } from 'nitro/h3'
 import type {
   AdminOperations,
   AllOperations,
@@ -69,6 +70,15 @@ export function createAdminApiContext(
       return response as GraphQLResponse
     } catch (error) {
       if (onError) onError(error)
+      const code = (error as { response?: { code?: number } })?.response?.code
+      if (code === 401 || code === 403) {
+        throw new HTTPError({
+          status: code,
+          message: code === 403
+            ? 'Shopify denied Admin API access. Confirm the app installation has the required scopes and your staff account can access this resource. Approve updated app permissions in Shopify admin, then reopen the app.'
+            : 'Shopify rejected the Admin API access token. Reopen the app from Shopify admin to authenticate again.'
+        })
+      }
       throw error
     }
   }

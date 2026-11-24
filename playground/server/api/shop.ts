@@ -1,16 +1,18 @@
-interface ShopData {
-  shop: {
-    name: string
-    currencyCode: string
-  }
-}
+import { defineHandler } from 'nitro'
+import { useShopifyAdmin } from '../../../src/runtime/server/utils/authenticate-admin'
+import { SHOP_QUERY } from '../utils/operations'
+import { requireAdminData } from '../utils/admin-data'
 
-export default defineEventHandler(async (event) => {
+export default defineHandler(async (event) => {
   const { admin } = await useShopifyAdmin(event)
-  const { data } = await admin.graphql<ShopData>(
-    `#graphql
-    { shop { name currencyCode } }`
+  return requireAdminData(
+    await admin.graphql<{
+      shop: {
+        name: string
+        currencyCode: string
+        myshopifyDomain: string
+        primaryDomain: { url: string }
+      }
+    }>(SHOP_QUERY)
   )
-
-  return data
 })

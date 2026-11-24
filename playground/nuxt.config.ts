@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     }
   },
   shopify: {
+    scopes: ['read_products'],
     apiKey: process.env.SHOPIFY_API_KEY || 'test-api-key',
     apiSecretKey:
       process.env.SHOPIFY_API_SECRET ||

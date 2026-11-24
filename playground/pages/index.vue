@@ -1,75 +1,52 @@
-<template>
-  <ShPage heading="App Playground Product">
-    <ShLink slot="breadcrumb-actions" href="/">Home</ShLink>
-    <ShButton
-      slot="primary-action"
-      variant="primary"
-      command-for="example-modal"
-      command="--show"
-    >
-      Show Modal
-    </ShButton>
-    <form data-save-bar @submit.prevent="test()">
-      <ShStack gap="base">
-        <div>
-          <ShHeading>Shopify Nuxt Playground</ShHeading>
-          <ShParagraph>
-            This app is loaded inside the Shopify Admin.
-          </ShParagraph>
-        </div>
-        <ShTextField
-          v-model="example"
-          label="Product title"
-          placeholder="Try write text-field"
-          required
-        />
-        <ShButton type="submit" variant="primary" @click="test">
-          Save
-        </ShButton>
-        <span>Typed: {{ example || '-' }}</span>
-        <ShBanner v-if="shop" heading="Shop info" tone="info">
-          <ShParagraph>
-            {{ shop.shop.name }} ({{ shop.shop.currencyCode }})
-          </ShParagraph>
-        </ShBanner>
-      </ShStack>
-    </form>
-    <ShModal id="example-modal" heading="Example Modal">
-      <ShParagraph>This is a Polaris modal.</ShParagraph>
-      <ShButton
-        slot="primary-action"
-        variant="primary"
-        command-for="example-modal"
-        command="--hide"
-      >
-        Close
-      </ShButton>
-    </ShModal>
-  </ShPage>
-</template>
-
 <script setup lang="ts">
-const shopify = useAppBridge()
-
-const { data: shopData } = await useAsyncData(
-  'shop',
+definePageMeta({ middleware: 'shopify-auth', layout: 'auth' })
+const { data, error, status, refresh } = await useAsyncData(
+  'playground-shop',
   () => useShopifyFetch('/api/shop'),
   { server: false }
 )
-
-const shop = computed(() => shopData.value?.data)
-
-const test = () => {
-  console.info(
-    'TOAST TRIGGERED',
-    shopify?.toast.show('Hello from the playground app!')
-  )
-}
-
-const example = ref('')
-
-definePageMeta({
-  middleware: 'shopify-auth',
-  layout: 'auth'
-})
+const shop = computed(() => data.value?.data.shop)
 </script>
+
+<template>
+  <ShPage heading="Store overview">
+    <ShButton
+      slot="secondary-actions"
+      :loading="status === 'pending'"
+      @click="refresh()"
+      >Refresh store</ShButton
+    >
+    <ShStack gap="base">
+      <p v-if="status === 'pending'" role="status">
+        Loading your Shopify store…
+      </p>
+      <ShBanner v-if="error" heading="Could not load your store" tone="critical"
+        ><ShParagraph>{{ error.message }}</ShParagraph
+        ><ShButton @click="refresh()">Try again</ShButton></ShBanner
+      >
+      <ShSection v-if="shop" :heading="shop.name">
+        <ShParagraph
+          >{{ shop.myshopifyDomain }} · {{ shop.currencyCode }}</ShParagraph
+        >
+        <ShLink :href="shop.primaryDomain.url" target="_blank"
+          >Visit storefront</ShLink
+        >
+      </ShSection>
+      <ShSection heading="Explore your app">
+        <ShStack gap="base"
+          ><ShParagraph
+            >Browse live products from the Admin API and save per-store app
+            preferences in Shopify. No sample products or simulated
+            saves.</ShParagraph
+          ><ShButtonGroup
+            ><ShButton href="/products" variant="primary"
+              >View products</ShButton
+            ><ShButton href="/settings"
+              >Manage settings</ShButton
+            ></ShButtonGroup
+          ></ShStack
+        >
+      </ShSection>
+    </ShStack>
+  </ShPage>
+</template>
