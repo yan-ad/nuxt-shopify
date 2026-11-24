@@ -1,8 +1,11 @@
-import { fileURLToPath } from 'node:url'
 import pkg from '../package.json'
 
 export default defineNuxtConfig({
   extends: ['docus'],
+
+  // Keep generated files next to the docs tsconfig, not in node_modules/.cache
+  // where Vite can discover the parent module's unprepared tsconfig instead.
+  buildDir: '.nuxt',
 
   modules: ['@nuxt/ui', '@nuxtjs/critters'],
 
@@ -41,9 +44,6 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    // Do not discover the module workspace's tsconfig for external/layer files.
-    // Its .nuxt directory is not generated when deploying only the docs app.
-    tsconfig: fileURLToPath(new URL('./.nuxt/tsconfig.json', import.meta.url)),
     build: {
       rollupOptions: {
         output: {
