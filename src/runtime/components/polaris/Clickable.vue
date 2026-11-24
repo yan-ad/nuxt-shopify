@@ -1,10 +1,14 @@
 <template>
-  <s-clickable v-bind="polarisAttrs">
+  <s-clickable v-if="polarisMounted" v-bind="polarisAttrs">
     <slot />
   </s-clickable>
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import type {
   BackgroundColorKeyword,
   BlockSizeShorthand,

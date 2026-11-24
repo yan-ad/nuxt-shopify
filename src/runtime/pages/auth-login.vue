@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { navigateTo, useRuntimeConfig, useCookie } from '#app'
+import { usePolarisClient } from '../shared/polaris-client'
 import { shopifyAdminAppUrl } from '../shared/admin-app-url'
 import { definePageMeta, onMounted, onUnmounted, ref } from '#imports'
 import ShSection from '../components/polaris/Section.vue'
@@ -17,6 +18,7 @@ definePageMeta({
   middleware: 'shopify-guest'
 })
 
+const polarisMounted = usePolarisClient()
 const shop = ref('')
 const error = ref('')
 const loading = ref(false)
@@ -71,7 +73,9 @@ async function handleSubmit() {
 
 <template>
   <div class="shopify-login">
-    <div class="shopify-login-card">
+    <p v-if="!polarisMounted" role="status">Loading Shopify sign-in…</p>
+    <noscript>JavaScript is required to sign in to this Shopify app.</noscript>
+    <div v-show="polarisMounted" class="shopify-login-card">
       <ShSection>
         <ShBox padding="small">
           <ShStack gap="small">

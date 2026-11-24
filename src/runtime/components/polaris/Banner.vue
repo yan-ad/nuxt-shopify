@@ -1,5 +1,6 @@
 <template>
   <s-banner
+    v-if="polarisMounted"
     v-bind="polarisAttrs"
     @dismiss="emit('dismiss', $event)"
     @after-hide="emit('afterHide', $event)"
@@ -9,6 +10,10 @@
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import type { ToneKeyword } from '../../types'
 import { usePolarisAttrs } from './utils'
 

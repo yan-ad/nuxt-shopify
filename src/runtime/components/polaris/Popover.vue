@@ -1,10 +1,14 @@
 <template>
-  <s-popover v-bind="polarisAttrs">
+  <s-popover v-if="polarisMounted" v-bind="polarisAttrs">
     <slot />
   </s-popover>
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import type {
   BlockSizeShorthand,
   InlineSizeShorthand,

@@ -1,10 +1,14 @@
 <template>
-  <s-text v-bind="polarisAttrs">
+  <s-text v-if="polarisMounted" v-bind="polarisAttrs">
     <slot />
   </s-text>
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import { usePolarisAttrs } from './utils'
 
 defineOptions({ inheritAttrs: false })

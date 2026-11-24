@@ -1,5 +1,6 @@
 <template>
   <s-text-field
+    v-if="polarisMounted"
     v-bind="polarisAttrs"
     :value="modelValue"
     @blur="emit('blur', $event)"
@@ -17,6 +18,10 @@
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import { computed } from 'vue'
 import type { PolarisIcon } from '../../types'
 import { usePolarisAttrs } from './utils'

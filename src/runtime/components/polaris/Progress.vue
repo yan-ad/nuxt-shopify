@@ -1,8 +1,12 @@
 <template>
-  <s-progress v-bind="polarisAttrs" />
+  <s-progress v-if="polarisMounted" v-bind="polarisAttrs" />
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import { usePolarisAttrs } from './utils'
 
 defineOptions({ inheritAttrs: false })

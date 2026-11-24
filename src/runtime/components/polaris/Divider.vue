@@ -1,10 +1,14 @@
 <template>
-  <s-divider v-bind="polarisAttrs">
+  <s-divider v-if="polarisMounted" v-bind="polarisAttrs">
     <slot />
   </s-divider>
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import type { MaybeResponsive } from '../../types'
 import { usePolarisAttrs } from './utils'
 

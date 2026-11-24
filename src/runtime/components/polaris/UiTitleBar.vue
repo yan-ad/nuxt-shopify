@@ -1,5 +1,5 @@
 <template>
-  <ui-title-bar v-bind="polarisAttrs">
+  <ui-title-bar v-if="polarisMounted" v-bind="polarisAttrs">
     <button
       v-if="primaryAction"
       variant="primary"
@@ -23,6 +23,10 @@
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import { usePolarisAttrs } from './utils'
 
 export interface TitleBarAction {

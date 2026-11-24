@@ -1,6 +1,7 @@
 <template>
   <div>
     basic
+    <DirectButton>Direct imported button</DirectButton>
     <ShEmptyState heading="Add your first product" data-testid="empty-state">
       <ShIcon slot="graphic" type="product" />
       <ShText slot="subheading">Add products to start selling.</ShText>
@@ -28,4 +29,6 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import DirectButton from '../../../src/runtime/components/polaris/Button.vue'
+</script>

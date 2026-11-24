@@ -1,10 +1,14 @@
 <template>
-  <s-icon v-bind="polarisAttrs">
+  <s-icon v-if="polarisMounted" v-bind="polarisAttrs">
     <slot />
   </s-icon>
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import type {
   ColorKeyword,
   PolarisIcon,

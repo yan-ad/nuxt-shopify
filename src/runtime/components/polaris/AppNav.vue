@@ -1,10 +1,14 @@
 <template>
-  <s-app-nav v-if="!standalone" v-bind="$attrs">
+  <s-app-nav v-if="polarisMounted && !standalone" v-bind="$attrs">
     <slot />
   </s-app-nav>
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import { useNuxtApp } from '#app'
 
 const standalone =

@@ -1,5 +1,6 @@
 <template>
   <s-avatar
+    v-if="polarisMounted"
     v-bind="polarisAttrs"
     @error="emit('error', $event)"
     @load="emit('load', $event)"
@@ -9,6 +10,10 @@
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import type { SizeKeyword } from '../../types'
 import { usePolarisAttrs } from './utils'
 

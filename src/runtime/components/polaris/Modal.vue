@@ -1,5 +1,5 @@
 <template>
-  <s-modal v-bind="polarisAttrs">
+  <s-modal v-if="polarisMounted" v-bind="polarisAttrs">
     <slot />
     <slot name="primary-action" />
     <slot name="secondary-actions" />
@@ -7,6 +7,10 @@
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import { usePolarisAttrs } from './utils'
 
 defineOptions({ inheritAttrs: false })

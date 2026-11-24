@@ -1,5 +1,6 @@
 <template>
   <ui-modal
+    v-if="polarisMounted"
     v-bind="polarisAttrs"
     @show="emit('show', $event)"
     @hide="emit('hide', $event)"
@@ -11,6 +12,10 @@
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import { usePolarisAttrs } from './utils'
 
 defineOptions({ inheritAttrs: false })

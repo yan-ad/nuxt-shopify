@@ -221,3 +221,17 @@ All `ShUi*` components can be controlled programmatically via the `shopify` glob
 | `shopify.intents.navigate()`         | Launch native Shopify admin workflows                      | [Intents API](https://shopify.dev/docs/api/app-home/apis/user-interface-and-interactions/intents-api)                 |
 
 See the full list at [App Bridge APIs and web methods](https://shopify.dev/docs/api/app-home/apis).
+
+## Client-only rendering
+
+Polaris and App Bridge web-component wrappers mount only in the browser. Every
+native wrapper has the same internal mount guard for auto-imports and direct
+imports: SSR and the initial hydration render produce a comment, then the real
+custom element mounts after Vue's `onMounted`. No extra container is inserted,
+so named slots, table structure, events, and `v-model` retain their normal APIs.
+
+`ShApp` and `ShLoadingIndicator` remain layout helpers and do not hide unrelated
+server-rendered page content. Raw `s-*` tags you write yourself are not guarded.
+For a useful initial loading state, wrap larger UI regions in Nuxt's `ClientOnly`
+with a `#fallback` slot. Browser JavaScript and Shopify's Polaris CDN are required
+for the interactive component UI.

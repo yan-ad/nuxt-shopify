@@ -1,5 +1,6 @@
 <template>
   <s-button
+    v-if="polarisMounted"
     v-bind="polarisAttrs"
     @click="emit('click', $event)"
     @focus="emit('focus', $event)"
@@ -10,6 +11,10 @@
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import type { PolarisIcon, ToneKeyword } from '../../types'
 import { usePolarisAttrs } from './utils'
 

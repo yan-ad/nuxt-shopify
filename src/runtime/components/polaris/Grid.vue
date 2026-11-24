@@ -1,10 +1,14 @@
 <template>
-  <s-grid v-bind="polarisAttrs">
+  <s-grid v-if="polarisMounted" v-bind="polarisAttrs">
     <slot />
   </s-grid>
 </template>
 
 <script setup lang="ts">
+import { usePolarisClient } from '../../shared/polaris-client'
+
+const polarisMounted = usePolarisClient()
+
 import type {
   AlignContentKeyword,
   AlignItemsKeyword,
