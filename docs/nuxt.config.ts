@@ -3,10 +3,6 @@ import pkg from '../package.json'
 export default defineNuxtConfig({
   extends: ['docus'],
 
-  // Keep generated files next to the docs tsconfig, not in node_modules/.cache
-  // where Vite can discover the parent module's unprepared tsconfig instead.
-  buildDir: '.nuxt',
-
   modules: ['@nuxt/ui', '@nuxtjs/critters'],
 
   components: {

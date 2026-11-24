@@ -88,7 +88,7 @@
     "lint": "oxlint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "test:types": "vue-tsc --noEmit -p tsconfig.module.json && cd playground && vue-tsc --noEmit",
     "format": "oxfmt .",
     "format:check": "oxfmt --check ."
   },
