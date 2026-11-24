@@ -14,9 +14,7 @@ export default defineNuxtPlugin({
       if (session) nuxtApp.payload.shopifyStandalone = { shop: session.shop }
       return
     }
-    const context = nuxtApp.payload.shopifyStandalone as
-      | { shop: string }
-      | undefined
+    const context = nuxtApp.payload.shopifyStandalone
     if (!context) return
     const config = useRuntimeConfig().public.shopify
     const shim = {

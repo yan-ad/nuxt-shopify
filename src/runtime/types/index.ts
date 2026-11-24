@@ -1,3 +1,4 @@
+export type { ShopifyStandaloneContext } from '../shared/standalone-context'
 import type {
   ApiVersion,
   Session,
