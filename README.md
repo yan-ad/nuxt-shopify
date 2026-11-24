@@ -163,3 +163,9 @@ This command runs checks, builds the package, updates the changelog, publishes t
 ## License
 
 [MIT](LICENSE)
+
+## Disclaimer
+
+This is an independent, community-maintained project. It is not affiliated with,
+endorsed by, or sponsored by Shopify Inc. Shopify and Polaris names, logos, and
+trademarks belong to their respective owners.
