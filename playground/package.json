@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^6.0.0",
-    "@nuxt/devtools": "^4.2.0",
+    "@nuxt/devtools": "3.4.4",
     "@shopify/graphql-codegen": "^0.1.0",
     "graphql": "^16.0.0"
   }
