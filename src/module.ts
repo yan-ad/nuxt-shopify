@@ -54,6 +54,29 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url)
     const logger = useLogger('@yan-ad/nuxt-shopify:module')
 
+    if (nuxt.options.dev) {
+      // Shopify CLI captures Nuxt's output but cannot display its auth prompt.
+      // Disable the DevTools browser authorization gate for local development.
+      if (nuxt.options.devtools !== false) {
+        nuxt.options.devtools = {
+          ...(typeof nuxt.options.devtools === 'object'
+            ? nuxt.options.devtools
+            : {}),
+          enabled:
+            typeof nuxt.options.devtools === 'object'
+              ? (nuxt.options.devtools.enabled ?? true)
+              : true,
+          disableAuthorization: true
+        }
+      }
+
+      nuxt.hook('listen', async (_server, listener) => {
+        const urls = await listener?.getURLs?.()
+        const url = urls?.[0]?.url || listener?.url
+        if (url) logger.info(`Nuxt local URL: ${url}`)
+      })
+    }
+
     // ─── Runtime Config ────────────────────────────────────────────────
     // Private server-side config (secrets — not exposed to client)
     nuxt.options.runtimeConfig.shopify = {

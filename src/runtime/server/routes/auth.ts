@@ -18,12 +18,11 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // For embedded apps using token exchange, begin OAuth
-  const callbackUrl = `${config.appUrl}${config.auth.callbackPath}`
-
+  // Shopify API expects a path here and builds the absolute callback URL from
+  // the configured host. Passing the full app URL would duplicate the host.
   const authUrl = await api.auth.begin({
     shop,
-    callbackPath: callbackUrl,
+    callbackPath: config.auth.callbackPath,
     isOnline: false,
     rawRequest: event.req,
     rawResponse: event.res

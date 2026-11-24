@@ -7,11 +7,11 @@
     "dev:nuxt": "bunx nuxi dev"
   },
   "dependencies": {
-    "nuxt": "^4.6.4",
-    "@nuxt/devtools": "^3.4.4"
+    "nuxt": "^4.6.4"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^6.0.0",
+    "@nuxt/devtools": "^4.2.0",
     "@shopify/graphql-codegen": "^0.1.0",
     "graphql": "^16.0.0"
   }
