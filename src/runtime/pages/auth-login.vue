@@ -132,7 +132,7 @@ async function handleSubmit() {
   </div>
 </template>
 
-<style scoped>
+<style>
 .shopify-login {
   display: flex;
   align-items: center;
