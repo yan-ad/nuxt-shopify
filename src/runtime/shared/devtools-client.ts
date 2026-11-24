@@ -3,15 +3,15 @@ import { withDevtoolsTimeout } from './devtools-bridge'
 export const DEVTOOLS_CLIENT_KEY = '__nuxtShopifyDevtoolsStore'
 
 type InspectorWindow = Window & {
-  __nuxtShopifyDevtoolsStore?: () => Promise<unknown>
+  __nuxtShopifyDevtoolsStore?: (action?: 'connect') => Promise<unknown>
 }
 
 export function findDevtoolsClient(
   start: Window,
   origin: string
-): (() => Promise<unknown>) | undefined {
+): ((action?: 'connect') => Promise<unknown>) | undefined {
   let current = start as InspectorWindow
-  let client: (() => Promise<unknown>) | undefined
+  let client: ((action?: 'connect') => Promise<unknown>) | undefined
   for (let depth = 0; depth < 12; depth++) {
     try {
       if (current.location.origin !== origin) break
@@ -29,7 +29,8 @@ export function findDevtoolsClient(
 /** Run in the authenticated app window, not the inspector's nested iframe. */
 export async function fetchDevtoolsStore(
   getToken: () => Promise<string>,
-  request: typeof fetch
+  request: typeof fetch,
+  action?: 'connect'
 ): Promise<unknown> {
   const controller = new AbortController()
   try {
@@ -40,11 +41,17 @@ export async function fetchDevtoolsStore(
           8000,
           'Shopify ID-token request timed out. Reload the app in Shopify admin and retry.'
         )
-        const response = await request('/_shopify/devtools/store', {
-          headers: { Authorization: `Bearer ${token}` },
-          cache: 'no-store',
-          signal: controller.signal
-        })
+        const response = await request(
+          action === 'connect'
+            ? '/_shopify/devtools/connect'
+            : '/_shopify/devtools/store',
+          {
+            method: action === 'connect' ? 'POST' : 'GET',
+            headers: { Authorization: `Bearer ${token}` },
+            cache: 'no-store',
+            signal: controller.signal
+          }
+        )
         const body = await response.json()
         if (!response.ok)
           throw new Error(

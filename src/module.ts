@@ -67,6 +67,15 @@ export default defineNuxtModule<ModuleOptions>({
         src: resolve('./runtime/plugins/devtools.client'),
         mode: 'client'
       })
+      addServerHandler({
+        route: '/_shopify/devtools/connect',
+        method: 'post',
+        handler: resolve('./runtime/server/routes/devtools-connect')
+      })
+      addServerHandler({
+        route: '/_shopify/devtools/standalone',
+        handler: resolve('./runtime/server/routes/devtools-standalone')
+      })
       extendPages((pages) => {
         pages.push({
           name: 'shopify-devtools',

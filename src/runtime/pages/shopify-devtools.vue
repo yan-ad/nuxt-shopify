@@ -35,12 +35,101 @@ interface StoreInfo {
 const data = ref<StoreInfo>()
 const loading = ref(false)
 const error = ref('')
+const opening = ref(false)
+const standalone = ref(false)
+async function openStandalone() {
+  if (opening.value) return
+  const popup = window.open('about:blank', '_blank')
+  if (!popup) {
+    error.value = 'Allow popups to open the standalone inspector.'
+    return
+  }
+  popup.opener = null
+  opening.value = true
+  try {
+    const client = standalone.value
+      ? async () => {
+          const response = await fetch('/_shopify/devtools/store', {
+            cache: 'no-store',
+            signal: AbortSignal.timeout(15000)
+          })
+          const body = await response.json()
+          if (!response.ok)
+            throw new Error(
+              body.message || 'Standalone connection unavailable.'
+            )
+          return body
+        }
+      : findDevtoolsClient(window.parent, window.location.origin)
+    if (!client)
+      throw new Error(
+        'Open standalone from the inspector inside Shopify admin.'
+      )
+    const result = (await withDevtoolsTimeout(
+      () => client('connect'),
+      22000,
+      'Standalone handoff timed out.'
+    )) as { ticket: string }
+    popup.location.replace(
+      `${window.location.origin}/_shopify/devtools#ticket=${encodeURIComponent(result.ticket)}`
+    )
+  } catch (failure) {
+    popup.close()
+    error.value =
+      failure instanceof Error ? failure.message : 'Unable to open standalone.'
+  } finally {
+    opening.value = false
+  }
+}
+async function disconnect() {
+  await fetch('/_shopify/devtools/standalone', { method: 'DELETE' })
+  data.value = undefined
+  error.value = 'Standalone disconnected. Reconnect from Shopify admin.'
+}
+async function initialize() {
+  standalone.value = window === window.parent
+  const ticket = new URLSearchParams(window.location.hash.slice(1)).get(
+    'ticket'
+  )
+  if (ticket) {
+    history.replaceState(null, '', window.location.pathname)
+    try {
+      const response = await fetch('/_shopify/devtools/standalone', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ticket }),
+        signal: AbortSignal.timeout(10000)
+      })
+      const body = await response.json()
+      if (!response.ok)
+        throw new Error(body.message || 'Unable to connect standalone.')
+    } catch (failure) {
+      error.value =
+        failure instanceof Error ? failure.message : 'Connection failed.'
+      return
+    }
+  }
+  await refresh()
+}
 async function refresh() {
   if (loading.value) return
   loading.value = true
   error.value = ''
   try {
-    const client = findDevtoolsClient(window.parent, window.location.origin)
+    const client = standalone.value
+      ? async () => {
+          const response = await fetch('/_shopify/devtools/store', {
+            cache: 'no-store',
+            signal: AbortSignal.timeout(15000)
+          })
+          const body = await response.json()
+          if (!response.ok)
+            throw new Error(
+              body.message || 'Standalone connection unavailable.'
+            )
+          return body
+        }
+      : findDevtoolsClient(window.parent, window.location.origin)
     if (!client)
       throw new Error(
         'The parent app transport is unavailable. Restart Nuxt, reload the app inside Shopify admin, then reopen DevTools.'
@@ -62,7 +151,7 @@ async function refresh() {
 function date(value: string | null) {
   return value ? new Date(value).toLocaleString() : 'Not available'
 }
-onMounted(refresh)
+onMounted(initialize)
 </script>
 
 <template>
@@ -76,9 +165,20 @@ onMounted(refresh)
           installation.
         </p>
       </div>
-      <button type="button" :disabled="loading" @click="refresh">
-        {{ loading ? 'Loading…' : 'Refresh store' }}
-      </button>
+      <div class="inspector-actions">
+        <button
+          v-if="!standalone"
+          type="button"
+          :disabled="opening || !data"
+          @click="openStandalone"
+        >
+          {{ opening ? 'Opening…' : 'Open Standalone' }}
+        </button>
+        <button v-else type="button" @click="disconnect">Disconnect</button>
+        <button type="button" :disabled="loading" @click="refresh">
+          {{ loading ? 'Loading…' : 'Refresh store' }}
+        </button>
+      </div>
     </header>
     <p role="status" aria-live="polite">
       {{ loading ? 'Fetching store information…' : '' }}
@@ -192,6 +292,11 @@ onMounted(refresh)
   background: var(--inspector-background);
   min-height: 100vh;
   box-sizing: border-box;
+}
+.inspector-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 header {
   display: flex;
