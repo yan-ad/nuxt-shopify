@@ -43,7 +43,7 @@ export default defineNuxtConfig({
   vite: {
     // Do not discover the module workspace's tsconfig for external/layer files.
     // Its .nuxt directory is not generated when deploying only the docs app.
-    tsconfig: fileURLToPath(new URL('./tsconfig.json', import.meta.url)),
+    tsconfig: fileURLToPath(new URL('./.nuxt/tsconfig.json', import.meta.url)),
     build: {
       rollupOptions: {
         output: {
